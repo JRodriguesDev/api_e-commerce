@@ -1,0 +1,7 @@
+node_modules
+.env
+src
+.gitignore
+README.md
+LICENSE
+prisma.config.ts
