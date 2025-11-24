@@ -1,15 +1,15 @@
 services:
-  mongo:
-    build:
-      context: ..
-      dockerfile: docker/mongodb.dockerfile
-    container_name: mongo
-    ports:
-      - 27017:27017
-    volumes:
-      - mongo-volume:/data/db
-    networks:
-      - api
+  #mongo:
+  #  build:
+  #    context: ..
+  #    dockerfile: docker/mongodb.dockerfile
+  #  container_name: mongo
+  #  ports:
+  #    - 27017:27017
+  #  volumes:
+  #    - mongo-volume:/data/db
+  #  networks:
+  #    - api
   node:
     build: 
       context: ..
@@ -21,8 +21,6 @@ services:
       - 3000:3000
     networks:
       - api
-    depends_on:
-      - mongo
 volumes:
   mongo-volume:
 networks:

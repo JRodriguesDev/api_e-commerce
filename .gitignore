@@ -2,3 +2,7 @@
 node_modules/
 src/generated/
 build/
+
+/generated/prisma
+
+/src/services/prisma/prisma
