@@ -1,0 +1,9 @@
+node_modules
+.env
+src
+.gitignore
+prisma.config.ts
+README.md
+LICENSE
+tsconfig.json
+docker

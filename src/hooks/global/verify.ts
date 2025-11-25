@@ -3,7 +3,7 @@ import fp from 'fastify-plugin'
 import prisma from '#prisma'
 
 const hook = async (fastify: FastifyInstance) => {
-    fastify.addHook('preHandler', () => {
+    fastify.addHook('preHandler', async () => {
         console.log('pre Handler')
     })
 }
