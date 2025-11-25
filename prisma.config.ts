@@ -6,7 +6,7 @@ import type { PrismaConfig } from 'prisma'
 export default defineConfig({
   schema: path.join('prisma'),
   migrations: {
-    path: "prisma/migrations",
+    path: "./migrate/migrations",
   },
   datasource: {
     url: env("DATABASE_URL"),
