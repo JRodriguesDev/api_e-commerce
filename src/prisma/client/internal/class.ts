@@ -23,22 +23,13 @@ const config: runtime.GetPrismaClientConfig = {
       "value": "prisma-client"
     },
     "output": {
-      "value": "/home/jose/api_e-commerce/src/services/prisma/prisma",
+      "value": "/home/jose/api_e-commerce/src/prisma/client",
       "fromEnvVar": null
     },
     "config": {
       "engineType": "library"
     },
     "binaryTargets": [
-      {
-        "fromEnvVar": null,
-        "value": "debian-openssl-3.0.x",
-        "native": true
-      },
-      {
-        "fromEnvVar": null,
-        "value": "linux-musl-openssl-3.0.x"
-      },
       {
         "fromEnvVar": null,
         "value": "debian-openssl-3.0.x"
@@ -48,7 +39,7 @@ const config: runtime.GetPrismaClientConfig = {
     "sourceFilePath": "/home/jose/api_e-commerce/prisma/schema.prisma",
     "isCustomOutput": true
   },
-  "relativePath": "../../../../prisma",
+  "relativePath": "../../../prisma",
   "clientVersion": "6.19.0",
   "engineVersion": "2ba551f319ab1df4bc874a89965d8b3641056773",
   "datasourceNames": [
@@ -64,8 +55,8 @@ const config: runtime.GetPrismaClientConfig = {
       }
     }
   },
-  "inlineSchema": "model User {\n  id   String @id @default(uuid()) @map(\"_id\") @db.ObjectId\n  name String\n\n  @@map(\"user\")\n}\n\n// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider      = \"prisma-client\"\n  output        = \"../src/services/prisma/prisma\"\n  binaryTargets = [\"native\", \"linux-musl-openssl-3.0.x\", \"debian-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider = \"mongodb\"\n  url      = env(\"DATABASE_URL\")\n}\n",
-  "inlineSchemaHash": "202b9be14ff9f0689cbeb9945d097f9ac9862bc2a6e35a742bda0df35ba0a47b",
+  "inlineSchema": "model User {\n  id   String @id @default(uuid()) @map(\"_id\") @db.ObjectId\n  name String\n\n  @@map(\"user\")\n}\n\n// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider      = \"prisma-client\"\n  output        = \"../src/prisma/client\"\n  binaryTargets = [\"debian-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider = \"mongodb\"\n  url      = env(\"DATABASE_URL\")\n}\n",
+  "inlineSchemaHash": "411cbf4eefa0b4d0e604814b8ddbfae985a7446eb1e20307cd6875f72b53929f",
   "copyEngine": true,
   "runtimeDataModel": {
     "models": {},

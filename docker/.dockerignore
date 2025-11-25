@@ -4,4 +4,3 @@ src
 .gitignore
 README.md
 LICENSE
-prisma.config.ts

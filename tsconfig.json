@@ -14,11 +14,11 @@
 
         "paths": {
             "#prisma": ["./src/services/prisma/index.ts"],
-            "#fastify_plugins": ["./src/utils/fastify_plugins/index.ts"],
+            "#fastify_plugins": ["./src/services/fastify_plugins/index.ts"],
             "#hooks_global": ["./src/hooks/global/index.ts"]
         }
 
     },
     "include": ["src"],
-    "exclude": ["node_modules", "src/services/prisma/prisma"]
+    "exclude": ["node_modules"]
 }

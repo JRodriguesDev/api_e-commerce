@@ -1,5 +1,5 @@
 import type {FastifyPluginCallback} from 'fastify'
-import {} from '#fastify_plugins'
+import {} from '../services/fastify_plugins/index.js'
 
 const routes: FastifyPluginCallback  = async (fastify) => {
     fastify.get('/', async (request, reply) => {

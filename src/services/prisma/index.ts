@@ -1,5 +1,5 @@
-import { PrismaClient } from './prisma/client.js';
-import type {Prisma} from './prisma/client.js';
+import { PrismaClient } from '../../prisma/client/client.js';
+import type {Prisma} from '../../prisma/client/client.js';
 
 
 //@ts-ignore

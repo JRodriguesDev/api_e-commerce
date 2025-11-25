@@ -5,11 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "tsx --env-file=.env src/index.ts",
-    "build": "tsc",
-    "start": "node --env-file=.env ."
+    "build": "tsc && cpx \"src/prisma/client/*.node\" build/prisma/client",
+    "start": "node ."
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
+    "cpx": "^1.5.0",
     "npx": "^10.2.2",
     "prisma": "^6.19.0",
     "tsx": "^4.20.6",
@@ -25,7 +26,11 @@
     "#prisma": [
       "./build/services/prisma/index.js"
     ],
-    "#fastify_plugins": ["./build/utils/fastify_plugins/index.js"],
-    "#hooks_global": ["./build/hooks/global/index.js"]
+    "#fastify_plugins": [
+      "./build/utils/fastify_plugins/index.js"
+    ],
+    "#hooks_global": [
+      "./build/hooks/global/index.js"
+    ]
   }
 }
