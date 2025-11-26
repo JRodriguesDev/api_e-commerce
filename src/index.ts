@@ -8,7 +8,7 @@ const fastify = Fastify({
 })
 
 //Hooks
-fastify.register(pre_handler_plugin)
+//fastify.register(pre_handler_plugin)
 
 //Plugins
 fastify.register(prisma_plugin)

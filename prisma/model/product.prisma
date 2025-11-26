@@ -1,0 +1,35 @@
+model Product {
+    id Int @id 
+    title String
+    description String
+    category String
+    price Float
+    rating Float
+    stock Int
+    images String[]
+    thumbnail String
+    reviews Reviews[]
+    @@map("product")
+}
+
+model Category {
+    id Int @id @default(autoincrement())
+    name String
+
+    @@map("category")
+}
+
+model Reviews {
+    id String @id @default(nanoid())
+    rating Int
+    comment String
+    date DateTime @default(now())
+
+    product Product @relation(fields: [productId], references: [id])
+    productId Int
+
+    author User @relation(fields: [authorId], references: [id])
+    authorId String
+
+    @@map("reviews")
+}

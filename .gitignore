@@ -1,6 +1,6 @@
 .env
 node_modules/
-src/generated/
+src/prisma/
 build/
-/generated/prisma
+
 
