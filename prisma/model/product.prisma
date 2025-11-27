@@ -9,14 +9,14 @@ model Product {
     images String[]
     thumbnail String
     reviews Reviews[]
-    @@map("product")
+    @@map("products")
 }
 
 model Category {
     id Int @id @default(autoincrement())
     name String
 
-    @@map("category")
+    @@map("categories")
 }
 
 model Reviews {

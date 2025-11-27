@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",
+    "bcryptjs": "^3.0.3",
     "dotenv": "^17.2.3",
     "fastify": "^5.6.2",
     "fastify-plugin": "^5.1.0"
@@ -31,6 +32,9 @@
     ],
     "#hooks_global": [
       "./build/hooks/global/index.js"
+    ],
+    "#schemas": [
+      "./build/validations/schemas/index.js"
     ]
   }
 }

@@ -14,7 +14,7 @@ const fastify = Fastify({
 fastify.register(prisma_plugin)
 
 //Routes
-fastify.register(routes)
+await routes(fastify)
 
 const start = async () => {
     try {

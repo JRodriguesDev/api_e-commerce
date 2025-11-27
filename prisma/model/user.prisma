@@ -2,7 +2,8 @@ model User {
     id String @id @default(uuid())
     name String
     email String @unique
+    password String
 
     reviews Reviews[]
-    @@map("user")
+    @@map("users")
 }

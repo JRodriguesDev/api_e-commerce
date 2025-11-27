@@ -16,7 +16,8 @@
             "#prisma": ["./src/services/prisma/index.ts"],
             "#fastify_plugins": ["./src/services/fastify_plugins/index.ts"],
             "#hooks_global": ["./src/hooks/global/index.ts"],
-            "#interfaces": ["./src/interfaces/index.ts"]
+            "#interfaces": ["./src/interfaces/index.ts"],
+            "#schemas": ["./src/validations/schemas/index.ts"]
         }
 
     },
