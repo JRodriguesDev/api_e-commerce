@@ -17,7 +17,10 @@
             "#fastify_plugins": ["./src/services/fastify_plugins/index.ts"],
             "#hooks_global": ["./src/hooks/global/index.ts"],
             "#interfaces": ["./src/interfaces/index.ts"],
-            "#schemas": ["./src/validations/schemas/index.ts"]
+            "#schemas/*": ["./src/validations/schemas/*"],
+            "#zod/*": ["./src/validations/zod/*"],
+            "#utils/*": ["./src/utils/*"],
+            "#middllewares/*": ["./src/validations/middlewares/*"]
         }
 
     },

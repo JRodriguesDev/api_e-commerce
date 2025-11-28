@@ -1,5 +1,5 @@
 import type {FastifyInstance} from 'fastify'
-import {opt_product} from '#schemas'
+import {opt_product} from '#schemas/product.js'
 
 export const product = async (fastify: FastifyInstance) => {
     fastify.get('/', opt_product, async (req, res) => {

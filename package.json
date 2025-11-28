@@ -17,11 +17,14 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@fastify/cookie": "^11.0.2",
     "@prisma/client": "^6.19.0",
     "bcryptjs": "^3.0.3",
     "dotenv": "^17.2.3",
     "fastify": "^5.6.2",
-    "fastify-plugin": "^5.1.0"
+    "fastify-plugin": "^5.1.0",
+    "jose": "^6.1.2",
+    "zod": "^4.1.13"
   },
   "imports": {
     "#prisma": [
@@ -33,8 +36,15 @@
     "#hooks_global": [
       "./build/hooks/global/index.js"
     ],
-    "#schemas": [
-      "./build/validations/schemas/index.js"
-    ]
+    "#schemas/*": [
+      "./build/validations/schemas/*"
+    ],
+    "#zod/*": [
+      "./build/validations/zod/*"
+    ],
+    "#utils/*": [
+      "./build/utils/*"
+    ],
+    "#middllewares/*": ["./build/validations/middlewares/*"]
   }
 }

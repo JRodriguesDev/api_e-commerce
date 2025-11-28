@@ -1,6 +1,8 @@
 import type {RouteShorthandOptions} from 'fastify'
+import {create_schema, login_schema} from '#zod/user.js'
 
 export const opt_user_create: RouteShorthandOptions = {
+    preHandler: create_schema,
     schema: {
         body: {
             type: 'object',
@@ -10,19 +12,12 @@ export const opt_user_create: RouteShorthandOptions = {
                 password: {type: 'string'}
             },
             required: ['name', 'email', 'password']
-        },
-        response: {
-            201: {
-                type: 'object',
-                properties: {
-                    user: {type: 'string'}
-                }
-            }
         }
     }
 }
 
 export const opt_user_login: RouteShorthandOptions = {
+    preHandler: login_schema,
     schema: {
         body: {
             type: 'object',
@@ -31,14 +26,6 @@ export const opt_user_login: RouteShorthandOptions = {
                 password: {type: 'string'}
             },
             required: ['email', 'password']
-        },
-        response: {
-            201: {
-                type: 'object',
-                properties: {
-                    verify: {type: 'boolean'}
-                }
-            }
         }
     }
 }
