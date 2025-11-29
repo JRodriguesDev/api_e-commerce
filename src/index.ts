@@ -1,14 +1,10 @@
 import Fastify from "fastify";
 import routes from "./routes/index.js";
 import {prisma_plugin} from './services/fastify_plugins/index.js'
-import {pre_handler_plugin} from '#hooks_global'
 
 const fastify = Fastify({
     logger: true
 })
-
-//Hooks
-//fastify.register(pre_handler_plugin)
 
 //Plugins
 fastify.register(prisma_plugin)

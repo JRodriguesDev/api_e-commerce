@@ -1,8 +1,9 @@
 import type {RouteShorthandOptions} from 'fastify'
-import {create_schema, login_schema} from '#zod/user.js'
+import {user_schema, user_password_schema} from '#zod/user.js'
+import {auth_guard} from '#middllewares/authGuard.js'
 
 export const opt_user_create: RouteShorthandOptions = {
-    preHandler: create_schema,
+    preHandler: user_schema,
     schema: {
         body: {
             type: 'object',
@@ -17,7 +18,7 @@ export const opt_user_create: RouteShorthandOptions = {
 }
 
 export const opt_user_login: RouteShorthandOptions = {
-    preHandler: login_schema,
+    preHandler: user_schema,
     schema: {
         body: {
             type: 'object',
@@ -26,6 +27,32 @@ export const opt_user_login: RouteShorthandOptions = {
                 password: {type: 'string'}
             },
             required: ['email', 'password']
+        }
+    }
+}
+
+export const opt_user_update: RouteShorthandOptions = {
+    preHandler: auth_guard,
+    schema: {
+        body: {
+            type: 'object',
+            properties: {
+                name: {type: 'string'},
+                email: {type: 'string'},
+            }
+        }
+    }
+}
+
+export const opt_user_password: RouteShorthandOptions = {
+    preHandler: [user_password_schema, auth_guard],
+    schema: {
+    body: {
+        type: 'object',
+        properties: {
+            password: {type: 'string'}
+        },
+        required: ['password']
         }
     }
 }
