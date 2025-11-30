@@ -4,7 +4,6 @@ import bcryptjs from 'bcryptjs'
 import {generate_token} from '#utils/jwt.js'
 import cookie from '@fastify/cookie'
 import {auth_guard} from '#middllewares/authGuard.js'
-import {User} from '#interfaces'
 import bcrypt from 'bcryptjs'
 
 export const user = async (fastify: FastifyInstance) => {
@@ -21,7 +20,7 @@ export const user = async (fastify: FastifyInstance) => {
         })
         const token = await generate_token({id: user.id})
         return res
-            .setCookie('token', token, {httpOnly: true, secure: true, sameSite: 'strict', path: '/user', signed: true})
+            .setCookie('token', token, {httpOnly: true, secure: true, sameSite: 'strict', path: '/', signed: true})
             .code(201)
             .send({user: {name: user.name, email: user.email}})
     })
@@ -33,14 +32,13 @@ export const user = async (fastify: FastifyInstance) => {
         if (!(await bcryptjs.compare(password, user!.password))) return {verify: 'Password Incorrect'}
         const token = await generate_token({id: user!.id})
         return res
-            .setCookie('token', token, {httpOnly: true, secure: true, sameSite: 'strict', path: '/user', signed: true})
+            .setCookie('token', token, {httpOnly: true, secure: true, sameSite: 'strict', path: '/', signed: true})
             .status(200)
             .send({user: {name: user!.name, email: user!.email}})
     })
     fastify.get('/', {preHandler: auth_guard}, async (req, res) => {
-        const payload = req.body as {id: string} as User
         const user = await fastify.prisma.user.findUnique({
-            where: {id: payload.id},
+            where: {id: req.user!.id},
             omit: {password: true},
             include: {reviews: true}
         })
@@ -69,5 +67,12 @@ export const user = async (fastify: FastifyInstance) => {
         return res
             .status(200)
             .send({user: {name: user!.name, email: user!.email}})
+    })
+    fastify.delete('/', {preHandler: auth_guard}, async (req, res) => {
+        const user = await fastify.prisma.user.delete({
+            where: {id: req.user!.id},
+            select: {name: true}
+        })
+        return res.status(200).send({user})
     })
 }

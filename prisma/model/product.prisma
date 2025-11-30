@@ -1,5 +1,5 @@
 model Product {
-    id Int @id 
+    id String @default(nanoid()) @id 
     title String
     description String
     category String
@@ -21,12 +21,12 @@ model Category {
 
 model Reviews {
     id String @id @default(nanoid())
-    rating Int
+    rating Float
     comment String
     date DateTime @default(now())
 
     product Product @relation(fields: [productId], references: [id])
-    productId Int
+    productId String
 
     author User @relation(fields: [authorId], references: [id])
     authorId String
