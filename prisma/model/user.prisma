@@ -4,6 +4,8 @@ model User {
     email String @unique
     password String
 
+    products Product[]
+
     reviews Reviews[]
     @@map("users")
 }

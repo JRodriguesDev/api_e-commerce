@@ -1,6 +1,71 @@
 import type {RouteShorthandOptions} from 'fastify'
+import {auth_guard} from '#middllewares/authGuard.js'
+import {product_create_schema} from '#zod/product.js'
 
-export const opt_product: RouteShorthandOptions = {
+export const opt_product_create: RouteShorthandOptions = {
+    preHandler: [auth_guard, product_create_schema],
+    schema: {
+        body: {
+            type: 'object',
+            properties: {
+                title: {type: 'string'},
+                description: {type: 'string'},
+                category: {type: 'string'},
+                price: {type: 'number'},
+                stock: {type: 'number'},
+                images: {type: 'array'},
+                thumbnail: {type: 'array'},
+            },
+            required: ['title', 'description', 'category', 'price', 'stock', 'images', 'thumbnail']
+        }
+    }
+}
+
+export const opt_product_update: RouteShorthandOptions = {
+    preHandler: auth_guard,
+    schema: {
+        body: {
+            type: 'object',
+            properties: {
+                title: {type: 'string'},
+                description: {type: 'string'},
+                category: {type: 'string'},
+                price: {type: 'number'},
+                stock: {type: 'number'},
+                images: {type: 'array'},
+                thumbnail: {type: 'array'},
+            },
+            anyOf: [
+                {required: ['title', 'description', 'category', 'price', 'stock', 'images', 'thumbnail']}
+            ]
+        }
+    }
+}
+
+export const opt_category_products: RouteShorthandOptions = {
+    schema: {
+        querystring: {
+            type: 'object',
+            properties: {
+                category: {type: 'string'}
+            }
+        }
+    }
+}
+
+export const opt_find_product: RouteShorthandOptions = {
+    schema: {
+        querystring: {
+            type: 'object',
+            properties: {
+                id: {type: 'string'}
+            },
+            required: ['id']
+        }
+    }
+}
+
+export const opt_pages_product: RouteShorthandOptions = {
     schema: {
         querystring: {
             type: 'object',

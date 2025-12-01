@@ -1,28 +1,109 @@
 import type {FastifyInstance} from 'fastify'
-import {opt_product} from '#schemas/product.js'
+import {opt_pages_product, opt_product_create, opt_product_update, opt_find_product, opt_category_products} from '#schemas/product.js'
+import {auth_guard} from '#middllewares/authGuard.js'
 import { Product } from '#interfaces'
 
 export const product = async (fastify: FastifyInstance) => {
-    fastify.get('/', opt_product, async (req, res) => {
+    fastify.post('/', opt_product_create, async (req, res) => {
+        const {reviews, ...data} = req.params as Product
+        try {
+            const product = await fastify.prisma.product.create({
+                data: {
+                    ...data,
+                    owner: {connect: {id: req.user!.id}},
+                },
+                select: {title: true}
+            })
+            return res.status(201).send({product})
+        } catch (err) {
+            return res.status(500).send({message: 'Internal Server Error'})
+        }
+    })
+    fastify.patch('/:id', opt_product_update, async (req, res) => {
+        const id = req.params as string
+        const {reviews, ...data} = req.params as Product
+        try {
+            const product = await fastify.prisma.product.update({
+                where: {id: id, ownerId: req.user!.id},
+                data: {...data},
+                select: {title: true}
+            })
+            return res.status(200).send({product})
+        } catch (err) {
+            return res.status(401).send({message: 'Product Not Found or Unauthorized'})
+        }
+    })
+    fastify.delete('/:id', {preHandler: auth_guard}, async (req, res) => {
+        const id = req.params as string
+        try {
+            const product = await fastify.prisma.product.delete({
+                where: {id: id, ownerId: req.user!.id},
+                select: {title: true}
+            })
+            return res.status(200).send({message: 'sucess'})
+        } catch (err) {
+            return res.status(401).send({message: 'Product Not Found or Unauthorized'})
+        }
+    })
+    fastify.get('/', opt_pages_product, async (req, res) => {
         const {limit, page} = req.query as {limit: number, page: number}
         const skip = (page - 1) * limit
-        const products = await fastify.prisma.product.findMany({
-            take: limit,
-            skip: skip,
-            omit: {images: true}
-        })
-        return res.status(200).send({products: products})
+        try {
+            const products = await fastify.prisma.product.findMany({
+                take: limit,
+                skip: skip,
+                select: {
+                    id: true,
+                    title: true,
+                    description: true,
+                    price: true,
+                    rating: true,
+                    category: true,
+                    thumbnail: true,
+                    owner: {select: {name: true}}
+                },
+            })
+            return res.status(200).send({products: products})
+        } catch (err) {
+            return res.status(500).send({message: 'Internal Server Error'})
+        }
     })
-    fastify.get('/:id', {schema: {params: {type: 'object'}}}, async (req, res) => {
+    fastify.get('/:category', opt_category_products, async (req, res) => {
+        const category = req.params as string
+        const {limit, page} = req.query as {limit: number, page: number}
+        const skip = (page - 1) * limit
+        try {
+            const products = await fastify.prisma.product.findMany({
+                where: {category: category},
+                take: limit,
+                skip: skip,
+                omit: {
+                    images: true,
+                }
+            })
+            return {products: products}
+        } catch (err) {
+            return res.status(400).send({message: 'Category Not Found'})
+        }
+    })
+    fastify.get('/product:id', opt_find_product, async (req, res) => {
         const {id} = req.params as {id: string}
-        const product = await fastify.prisma.product.findUnique({
-            where: {id},
-            omit: {thumbnail: true},
-            include: {reviews: true}
-        })
-        return res.status(200).send({product})
+        try {
+            const product = await fastify.prisma.product.findUnique({
+                where: {id},
+                omit: {thumbnail: true},
+                include: {reviews: true}
+            })
+            return res.status(200).send({product})
+        } catch (err) {
+            return res.status(400).send({message: 'Product Not Found'})
+        }
     })
-    fastify.post('/create', async (request, reply) => {
+
+
+
+
+    fastify.post('/fapi', async (request, reply) => {
     const data_products = await fetch('https://dummyjson.com/products?limit=0')
     const response: [Product] = (await data_products.json()).products
     const product_list = response.map(product => {
@@ -37,6 +118,7 @@ export const product = async (fastify: FastifyInstance) => {
             thumbnail: product.thumbnail
         }
     })
+    /*
     const db = await fastify.prisma.product.createMany({
         data: [...product_list]
     })
@@ -47,6 +129,6 @@ export const product = async (fastify: FastifyInstance) => {
             data: {name: cat}
         })
     }
-    return {'product': db}
+    return {'product': db} */
     })
 }

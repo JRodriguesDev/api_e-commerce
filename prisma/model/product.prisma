@@ -9,27 +9,9 @@ model Product {
     images String[]
     thumbnail String
     reviews Reviews[]
+
+    owner User @relation(fields: [ownerId], references: [id])
+    ownerId String
+
     @@map("products")
-}
-
-model Category {
-    id Int @id @default(autoincrement())
-    name String
-
-    @@map("categories")
-}
-
-model Reviews {
-    id String @id @default(nanoid())
-    rating Float
-    comment String
-    date DateTime @default(now())
-
-    product Product @relation(fields: [productId], references: [id])
-    productId String
-
-    author User @relation(fields: [authorId], references: [id])
-    authorId String
-
-    @@map("reviews")
 }

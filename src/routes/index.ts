@@ -5,9 +5,9 @@ import {category} from './category.js'
 import {review} from './review.js'
 
 const routes = async (fastify: FastifyInstance) => {
-    fastify.register(product, {prefix: '/product'})
+    fastify.register(product, {prefix: '/products'})
     fastify.register(user, {prefix: '/user'})
-    fastify.register(category, {prefix: '/category'})
+    fastify.register(category, {prefix: '/categories'})
     fastify.register(review, {prefix: '/review'})
 }
 

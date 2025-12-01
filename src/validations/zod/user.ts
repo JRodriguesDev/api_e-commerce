@@ -1,7 +1,7 @@
 import {z} from 'zod'
 import type { FastifyRequest, FastifyReply } from 'fastify'
 
-export const user_schema = async (req: FastifyRequest, res: FastifyReply) => {
+export const user_create_schema = async (req: FastifyRequest, res: FastifyReply) => {
     const zod_shema = z.object({
         name: z.string('name is string'),
         email: z.string().email('email invalid'),
