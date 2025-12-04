@@ -25,7 +25,7 @@ export const review =  async (fastify: FastifyInstance) => {
             })
             return res.status(201).send({review})
         } catch (err) {
-            return res.status(500).send({message: 'Internal Server Error'})
+            return res.status(500).send({message: `Internal Server Error`})
         }
     })
     fastify.patch('/:id', opt_review_update, async (req, res) => {

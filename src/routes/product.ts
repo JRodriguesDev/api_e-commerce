@@ -2,10 +2,12 @@ import type {FastifyInstance} from 'fastify'
 import {opt_pages_product, opt_product_create, opt_product_update, opt_find_product, opt_category_products} from '#schemas/product.js'
 import {auth_guard} from '#middllewares/authGuard.js'
 import { Product } from '#interfaces'
+import cookie from '@fastify/cookie'
 
 export const product = async (fastify: FastifyInstance) => {
+    fastify.register(cookie, {secret: process.env.COOKIE_SECRET, hook: 'onRequest'})
     fastify.post('/', opt_product_create, async (req, res) => {
-        const {reviews, ...data} = req.params as Product
+        const {reviews, ...data} = req.body as Product
         try {
             const product = await fastify.prisma.product.create({
                 data: {
@@ -16,12 +18,12 @@ export const product = async (fastify: FastifyInstance) => {
             })
             return res.status(201).send({product})
         } catch (err) {
-            return res.status(500).send({message: 'Internal Server Error'})
+            return res.status(500).send({message: `Internal Server ${err}`})
         }
     })
     fastify.patch('/:id', opt_product_update, async (req, res) => {
-        const id = req.params as string
-        const {reviews, ...data} = req.params as Product
+        const {id} = req.params as {id: string}
+        const {reviews, ...data} = req.body as Product
         try {
             const product = await fastify.prisma.product.update({
                 where: {id: id, ownerId: req.user!.id},
@@ -34,7 +36,7 @@ export const product = async (fastify: FastifyInstance) => {
         }
     })
     fastify.delete('/:id', {preHandler: auth_guard}, async (req, res) => {
-        const id = req.params as string
+        const {id} = req.params as {id: string}
         try {
             const product = await fastify.prisma.product.delete({
                 where: {id: id, ownerId: req.user!.id},
@@ -69,7 +71,7 @@ export const product = async (fastify: FastifyInstance) => {
         }
     })
     fastify.get('/:category', opt_category_products, async (req, res) => {
-        const category = req.params as string
+        const {category} = req.params as {category: string}
         const {limit, page} = req.query as {limit: number, page: number}
         const skip = (page - 1) * limit
         try {
@@ -77,22 +79,40 @@ export const product = async (fastify: FastifyInstance) => {
                 where: {category: category},
                 take: limit,
                 skip: skip,
-                omit: {
-                    images: true,
-                }
+                select: {
+                    id: true,
+                    title: true,
+                    description: true,
+                    price: true,
+                    rating: true,
+                    category: true,
+                    thumbnail: true,
+                    owner: {select: {name: true}}
+                },
             })
             return {products: products}
         } catch (err) {
-            return res.status(400).send({message: 'Category Not Found'})
+            return res.status(400).send({message: `Category Not Found ${err}`})
         }
     })
-    fastify.get('/product:id', opt_find_product, async (req, res) => {
+    fastify.get('/product/:id', opt_find_product, async (req, res) => {
         const {id} = req.params as {id: string}
         try {
             const product = await fastify.prisma.product.findUnique({
                 where: {id},
                 omit: {thumbnail: true},
-                include: {reviews: true}
+                include: {
+                    reviews: {
+                        select: {
+                            comment: true, 
+                            date: true, 
+                            rating: true, 
+                            id: true, 
+                            author: {select: {name: true}}
+                        }},
+                        owner: {select: {name: true}
+                    }
+                }
             })
             return res.status(200).send({product})
         } catch (err) {
@@ -102,7 +122,7 @@ export const product = async (fastify: FastifyInstance) => {
 
 
 
-
+    /*
     fastify.post('/fapi', async (request, reply) => {
     const data_products = await fetch('https://dummyjson.com/products?limit=0')
     const response: [Product] = (await data_products.json()).products
@@ -118,7 +138,6 @@ export const product = async (fastify: FastifyInstance) => {
             thumbnail: product.thumbnail
         }
     })
-    /*
     const db = await fastify.prisma.product.createMany({
         data: [...product_list]
     })
@@ -129,6 +148,6 @@ export const product = async (fastify: FastifyInstance) => {
             data: {name: cat}
         })
     }
-    return {'product': db} */
-    })
+    return {'product': db}
+    })*/
 }

@@ -27,7 +27,8 @@ export const opt_review_update: RouteShorthandOptions = {
                 comment: {type: 'string'},
             },
             anyOf: [
-                {required: ['rating', 'comment']},
+                {required: ['rating']},
+                {required: ['comment']},
             ]
         }
     }

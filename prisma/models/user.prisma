@@ -5,7 +5,7 @@ model User {
     password String
 
     products Product[]
-
     reviews Reviews[]
+    
     @@map("users")
 }

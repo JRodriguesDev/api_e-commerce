@@ -41,7 +41,8 @@ export const opt_user_update: RouteShorthandOptions = {
                 email: {type: 'string'},
             },
             anyOf: [
-                {required: ['name', 'email']},
+                {required: ['name']},
+                {required: ['email']},
             ]
         }
     }

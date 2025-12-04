@@ -5,6 +5,7 @@ import {generate_token} from '#utils/jwt.js'
 import cookie from '@fastify/cookie'
 import {auth_guard} from '#middllewares/authGuard.js'
 import bcrypt from 'bcryptjs'
+import { product } from './product.js'
 
 export const user = async (fastify: FastifyInstance) => {
     fastify.register(cookie, {secret: process.env.COOKIE_SECRET, hook: 'onRequest'})
@@ -49,9 +50,9 @@ export const user = async (fastify: FastifyInstance) => {
             const user = await fastify.prisma.user.findUnique({
                 where: {id: req.user!.id},
                 omit: {password: true},
-                include: {reviews: true}
+                include: {reviews: true, products: true}
             })
-            return res.status(200).send({user: {name: user!.name, email: user!.email, reviews: user!.reviews}})
+            return res.status(200).send({user: {name: user!.name, email: user!.email, reviews: user!.reviews, products: user!.products}})
         } catch (err) {
             return res.status(401).send({message: 'User Not Found or Unauthorized'})
         }

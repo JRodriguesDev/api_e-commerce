@@ -14,7 +14,7 @@ export const opt_product_create: RouteShorthandOptions = {
                 price: {type: 'number'},
                 stock: {type: 'number'},
                 images: {type: 'array'},
-                thumbnail: {type: 'array'},
+                thumbnail: {type: 'string'},
             },
             required: ['title', 'description', 'category', 'price', 'stock', 'images', 'thumbnail']
         }
@@ -36,26 +36,21 @@ export const opt_product_update: RouteShorthandOptions = {
                 thumbnail: {type: 'array'},
             },
             anyOf: [
-                {required: ['title', 'description', 'category', 'price', 'stock', 'images', 'thumbnail']}
+                {required: ['title']},
+                {required: ['description']},
+                {required: ['category']},
+                {required: ['price']},
+                {required: ['stock']},
+                {required: ['images']},
+                {required: ['thumbnail']},
             ]
-        }
-    }
-}
-
-export const opt_category_products: RouteShorthandOptions = {
-    schema: {
-        querystring: {
-            type: 'object',
-            properties: {
-                category: {type: 'string'}
-            }
         }
     }
 }
 
 export const opt_find_product: RouteShorthandOptions = {
     schema: {
-        querystring: {
+        params: {
             type: 'object',
             properties: {
                 id: {type: 'string'}
@@ -74,15 +69,26 @@ export const opt_pages_product: RouteShorthandOptions = {
                 page: {type: 'number'}
             },
             required: ['limit', 'page']
+        }
+    }
+}
+
+export const opt_category_products: RouteShorthandOptions = {
+    schema: {
+        params: {
+            type: 'object',
+            properties: {
+                category: {type: 'string'}
+            },
+            required: ['category']
         },
-        response: {
-            200: {
-                description: 'user created',
-                type: 'object',
-                properties: {
-                    products: {type: 'array'}
-                }
-            }
+        querystring: {
+            type: 'object',
+            properties: {
+                limit: {type: 'number'},
+                page: {type: 'number'}
+            },
+            required: ['limit', 'page']
         }
     }
 }
