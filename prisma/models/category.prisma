@@ -1,5 +1,5 @@
 model Category {
-    id Int @id @default(autoincrement())
+    id String @id @default(nanoid())
     name String
 
     @@map("categories")

@@ -1,6 +1,6 @@
 import type {RouteShorthandOptions} from 'fastify'
-import {review_create_schema} from '#zod/review.js'
-import {auth_guard} from '#middllewares/authGuard.js'
+import {review_create_schema} from '../zod/review.js'
+import {auth_guard} from '#middllewares'
 
 export const opt_review_create: RouteShorthandOptions = {
     preHandler: [auth_guard, review_create_schema],
@@ -32,4 +32,8 @@ export const opt_review_update: RouteShorthandOptions = {
             ]
         }
     }
+}
+
+export const opt_review_delete: RouteShorthandOptions = {
+    preHandler: [auth_guard]
 }

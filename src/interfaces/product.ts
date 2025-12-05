@@ -10,11 +10,3 @@ export interface Product {
     images?: []
     reviews?: []
 }
-
-export interface Reviews {
-    id: string
-    rating: number
-    comment: string
-    data: Date
-
-}

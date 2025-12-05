@@ -6,5 +6,5 @@ export const auth_guard = async (req: FastifyRequest, res: FastifyReply) => {
     const cookie = req.unsignCookie(req.cookies.token!)
     if (!cookie.valid) return res.status(401).send("Unauthorized")
     const token = await verify_token(cookie.value!)
-    req.user = {id: token.payload.id as string}
+    req.user = {id: token.payload.id as string, role: token.payload.role as string}
 }

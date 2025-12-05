@@ -1,12 +1,11 @@
 import type {FastifyInstance} from 'fastify'
-import {opt_pages_product, opt_product_create, opt_product_update, opt_find_product, opt_category_products} from '#schemas/product.js'
-import {auth_guard} from '#middllewares/authGuard.js'
+import {opt_pages_product, opt_product_create, opt_product_update, opt_user_delete, opt_find_product, opt_category_products} from '../validations/schemas/product.js'
 import { Product } from '#interfaces'
 import cookie from '@fastify/cookie'
 
 export const product = async (fastify: FastifyInstance) => {
     fastify.register(cookie, {secret: process.env.COOKIE_SECRET, hook: 'onRequest'})
-    fastify.post('/', opt_product_create, async (req, res) => {
+    fastify.post('/product', opt_product_create, async (req, res) => {
         const {reviews, ...data} = req.body as Product
         try {
             const product = await fastify.prisma.product.create({
@@ -21,7 +20,7 @@ export const product = async (fastify: FastifyInstance) => {
             return res.status(500).send({message: `Internal Server ${err}`})
         }
     })
-    fastify.patch('/:id', opt_product_update, async (req, res) => {
+    fastify.patch('/product/:id', opt_product_update, async (req, res) => {
         const {id} = req.params as {id: string}
         const {reviews, ...data} = req.body as Product
         try {
@@ -35,7 +34,7 @@ export const product = async (fastify: FastifyInstance) => {
             return res.status(401).send({message: 'Product Not Found or Unauthorized'})
         }
     })
-    fastify.delete('/:id', {preHandler: auth_guard}, async (req, res) => {
+    fastify.delete('/product/:id', opt_user_delete, async (req, res) => {
         const {id} = req.params as {id: string}
         try {
             const product = await fastify.prisma.product.delete({

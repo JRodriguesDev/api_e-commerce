@@ -1,6 +1,6 @@
 import type {RouteShorthandOptions} from 'fastify'
-import {auth_guard} from '#middllewares/authGuard.js'
-import {product_create_schema} from '#zod/product.js'
+import {auth_guard} from '#middllewares'
+import {product_create_schema} from '../zod/product.js'
 
 export const opt_product_create: RouteShorthandOptions = {
     preHandler: [auth_guard, product_create_schema],
@@ -46,6 +46,10 @@ export const opt_product_update: RouteShorthandOptions = {
             ]
         }
     }
+}
+
+export const opt_user_delete: RouteShorthandOptions = {
+    preHandler: [auth_guard]
 }
 
 export const opt_find_product: RouteShorthandOptions = {

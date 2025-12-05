@@ -1,12 +1,12 @@
 import { type FastifyInstance } from "fastify";
-import {opt_review_create, opt_review_update} from '#schemas/review.js'
-import {auth_guard} from '#middllewares/authGuard.js'
+import {opt_review_create, opt_review_update, opt_review_delete} from '../validations/schemas/review.js'
 import cookie from '@fastify/cookie'
+import { Review } from "#interfaces";
 
 export const review =  async (fastify: FastifyInstance) => {
     fastify.register(cookie, {secret: process.env.COOKIE_SECRET, hook: 'onRequest'})
     fastify.post('/', opt_review_create, async (req, res) => {
-        const {rating, comment, productId} = req.body as {rating: number, comment: string, productId: string}
+        const {rating, comment, productId} = req.body as Review
         try {
             const review = await fastify.prisma.reviews.create({
                 data: {
@@ -30,7 +30,7 @@ export const review =  async (fastify: FastifyInstance) => {
     })
     fastify.patch('/:id', opt_review_update, async (req, res) => {
         const {id}  = req.params as {id: string}
-        const body = req.body as {rating?: number, comment?: string}
+        const body = req.body as Pick<Review, 'comment' | 'rating'>
         try {
             const review = await fastify.prisma.reviews.update({
                 where: {id: id, authorId: req.user!.id},
@@ -47,9 +47,8 @@ export const review =  async (fastify: FastifyInstance) => {
         } catch (err) {
             return res.status(404).send({message: 'Review not found or Unauthorized'})
         }
-
     })
-    fastify.delete('/:id', {preHandler: auth_guard}, async (req, res) => {
+    fastify.delete('/:id', opt_review_delete, async (req, res) => {
         const {id} = req.params as {id: string}
         try {
             const review = await fastify.prisma.reviews.delete({

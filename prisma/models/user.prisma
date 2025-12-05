@@ -3,9 +3,15 @@ model User {
     name String
     email String @unique
     password String
+    role Role @default(USER)
 
     products Product[]
     reviews Reviews[]
     
     @@map("users")
+}
+
+enum Role {
+    USER
+    ADMIN
 }

@@ -36,15 +36,13 @@
     "#hooks_global": [
       "./build/hooks/global/index.js"
     ],
-    "#schemas/*": [
-      "./build/validations/schemas/*"
-    ],
+    "#schemas/*": ["./build/validations/schemas/*"],
     "#zod/*": [
       "./build/validations/zod/*"
     ],
     "#utils/*": [
       "./build/utils/*"
     ],
-    "#middllewares/*": ["./build/validations/middlewares/*"]
+    "#middllewares": ["./build/validations/middlewares/index.js"]
   }
 }
