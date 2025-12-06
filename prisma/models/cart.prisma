@@ -1,0 +1,21 @@
+model Cart {
+    id String @id @default(nanoid())
+    items CartItem[]
+
+    user User @relation(fields: [userId], references: [id])
+    userId String @unique
+
+    @@map("cart")
+}
+
+model CartItem {
+    id String @id @default(nanoid())
+    quantity Int @default(1)
+    productId String
+
+    cart Cart @relation(fields: [cartId], references: [id])
+    cartId String
+
+    @@unique([cartId, productId])
+    @@map("cartItem")
+}

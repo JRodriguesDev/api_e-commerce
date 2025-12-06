@@ -1,5 +1,5 @@
 import type {FastifyInstance} from 'fastify'
-import {opt_user_create, opt_user_login, opt_user_password, opt_user_update, opt_user_delete, opt_user_get} from '../validations/schemas/user.js'
+import {opt_user_create, opt_user_login, opt_user_password, opt_user_search, opt_user_find, opt_user_update, opt_user_delete, opt_user_get} from '../validations/schemas/user.js'
 import bcryptjs from 'bcryptjs'
 import {generate_token} from '#utils/jwt.js'
 import cookie from '@fastify/cookie'
@@ -19,11 +19,19 @@ export const user = async (fastify: FastifyInstance) => {
                 },
                 omit: {password: true}
             })
+            const cart = await fastify.prisma.cart.create({
+                data: {
+                    user: {connect: {id: user.id}}
+                },
+                include: {
+                    items: true
+                }
+            })
             const token = await generate_token({id: user.id, role: user.role})
             return res
                 .setCookie('token', token, {httpOnly: true, secure: true, sameSite: 'strict', path: '/', signed: true})
                 .code(201)
-                .send({user: {name: user.name, email: user.email}})
+                .send({user: {name: user.name, email: user.email}, cart})
         } catch (err) {
             return res.status(500).send({message: 'Internal Server Error'})
         }
@@ -32,16 +40,64 @@ export const user = async (fastify: FastifyInstance) => {
         const {email, password} = req.body as User
         try {
             const user = await fastify.prisma.user.findUnique({
-                where: {email}
+                where: {email},
+                include: {cart: true}
             })
             if (!(await bcryptjs.compare(password, user!.password))) return {verify: 'Password Incorrect'}
             const token = await generate_token({id: user!.id, role: user!.role})
             return res
                 .setCookie('token', token, {httpOnly: true, secure: true, sameSite: 'strict', path: '/', signed: true})
                 .status(200)
-                .send({user: {name: user!.name, email: user!.email}})
+                .send({user: {name: user!.name, email: user!.email, cart: user!.cart}})
         } catch (err) {
             return res.status(400).send({message: 'Email not Found'})
+        }
+    })
+    fastify.get('/', opt_user_get, async (req, res) => {
+        try {
+            const user = await fastify.prisma.user.findUnique({
+                where: {id: req.user!.id},
+                omit: {password: true},
+                include: {reviews: true, products: true, cart: true}
+            })
+            return res.status(200).send({user: {name: user!.name, email: user!.email,role: user!.role , reviews: user!.reviews, products: user!.products, cart: user!.cart}})
+        } catch (err) {
+            return res.status(401).send({message: 'User Not Found or Unauthorized'})
+        }
+    })
+    fastify.get('/users', opt_user_search, async (req, res) => {
+        const {name} = req.query as {name: string}
+        try {
+            const user = await fastify.prisma.user.findMany({
+                where: {
+                    name: {
+                        startsWith: name,
+                        mode: 'insensitive'
+                    }
+                },
+                select: {
+                    id: true,
+                    name: true
+                }
+            })
+            return res.status(200).send({user})
+        } catch (err) {
+            return res.status(500).send({message: 'Internal Server Error'})
+        }
+    })
+    fastify.get('/user/:id', opt_user_find, async (req, res) => {
+        const {id} = req.params as {id?: string}
+        try {
+            const user = await fastify.prisma.user.findUnique({
+                where: {id},
+                omit: {password: true, role: true, email: true},
+                include: {
+                    products: {omit: {images: true}}
+                }
+            })
+            return res.status(200).send({user})
+        } catch (err) {
+            return res.status(500).send({message: 'Internal Server Error'})
         }
     })
     fastify.patch('/', opt_user_update, async (req, res) => {
@@ -87,18 +143,6 @@ export const user = async (fastify: FastifyInstance) => {
                 select: {name: true}
             })
             return res.status(200).send({message: 'sucess'})
-        } catch (err) {
-            return res.status(401).send({message: 'User Not Found or Unauthorized'})
-        }
-    })
-        fastify.get('/', opt_user_get, async (req, res) => {
-        try {
-            const user = await fastify.prisma.user.findUnique({
-                where: {id: req.user!.id},
-                omit: {password: true},
-                include: {reviews: true, products: true}
-            })
-            return res.status(200).send({user: {name: user!.name, email: user!.email,role: user!.role , reviews: user!.reviews, products: user!.products}})
         } catch (err) {
             return res.status(401).send({message: 'User Not Found or Unauthorized'})
         }

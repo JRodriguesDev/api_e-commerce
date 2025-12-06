@@ -3,10 +3,5 @@ export interface Review {
     rating: number,
     comment: string,
     date: Date,
-    
-    product?: {}
-    productId?: string
-    
-    author?: {}
-    authorId: string
+    productId: string
 }

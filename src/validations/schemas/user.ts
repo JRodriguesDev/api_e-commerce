@@ -31,6 +31,29 @@ export const opt_user_login: RouteShorthandOptions = {
     }
 }
 
+export const opt_user_search: RouteShorthandOptions = {
+    schema: {
+        querystring: {
+            properties : {
+                name: {type: 'string'}
+            },
+            required: ['name']
+        }
+    }
+}
+
+export const opt_user_find: RouteShorthandOptions = {
+    schema: {
+        params: {
+            type: 'object',
+            properties: {
+                id: {type: 'string'},
+            },
+            required: ['id']
+        }
+    }
+}
+
 export const opt_user_update: RouteShorthandOptions = {
     preHandler: auth_guard,
     schema: {

@@ -20,7 +20,7 @@ export const review =  async (fastify: FastifyInstance) => {
                     date: true,
                     rating: true,
                     id: true,
-                    author: {select: {name: true}}
+                    author: {select: {name: true, id: true}}
                 }
             })
             return res.status(201).send({review})
@@ -40,7 +40,7 @@ export const review =  async (fastify: FastifyInstance) => {
                     date: true,
                     rating: true,
                     id: true,
-                    author: {select: {name: true}}
+                    author: {select: {name: true, id: true}}
                 }
             })
             return res.status(200).send({review})

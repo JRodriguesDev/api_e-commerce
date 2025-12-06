@@ -6,7 +6,7 @@ import cookie from '@fastify/cookie'
 export const product = async (fastify: FastifyInstance) => {
     fastify.register(cookie, {secret: process.env.COOKIE_SECRET, hook: 'onRequest'})
     fastify.post('/product', opt_product_create, async (req, res) => {
-        const {reviews, ...data} = req.body as Product
+        const {...data} = req.body as Product
         try {
             const product = await fastify.prisma.product.create({
                 data: {
@@ -22,7 +22,7 @@ export const product = async (fastify: FastifyInstance) => {
     })
     fastify.patch('/product/:id', opt_product_update, async (req, res) => {
         const {id} = req.params as {id: string}
-        const {reviews, ...data} = req.body as Product
+        const {...data} = req.body as Product
         try {
             const product = await fastify.prisma.product.update({
                 where: {id: id, ownerId: req.user!.id},
@@ -107,9 +107,9 @@ export const product = async (fastify: FastifyInstance) => {
                             date: true, 
                             rating: true, 
                             id: true, 
-                            author: {select: {name: true}}
+                            author: {select: {name: true, id: true}}
                         }},
-                        owner: {select: {name: true}
+                        owner: {select: {name: true, id: true}
                     }
                 }
             })

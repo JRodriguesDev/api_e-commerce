@@ -5,7 +5,7 @@ import {Category} from '#interfaces'
 
 export const category = async (fastify: FastifyInstance) => {
     fastify.register(cookie, {secret: process.env.COOKIE_SECRET, hook: 'onRequest'})
-    fastify.post('/', opt_category_create, async (req, res) => {
+    fastify.post('/category', opt_category_create, async (req, res) => {
         const {name} = req.body as Category
         try {
             const category = await fastify.prisma.category.create({
@@ -17,7 +17,7 @@ export const category = async (fastify: FastifyInstance) => {
             return res.status(500).send({message: 'Internal Server Error'})
         }
     })
-    fastify.patch('/:id', opt_category_update, async (req, res) => {
+    fastify.patch('/category/:id', opt_category_update, async (req, res) => {
         const {name} = req.body as Category
         const {id} = req.params as {id: string}
         try {
@@ -31,7 +31,7 @@ export const category = async (fastify: FastifyInstance) => {
             return res.status(500).send({message: 'Internal Server Error'})
         }
     })
-    fastify.delete('/:id', opt_category_delete, async (req, res) => {
+    fastify.delete('/category/:id', opt_category_delete, async (req, res) => {
         const {id} = req.params as {id: string}
         try {
             const category = await fastify.prisma.category.delete({
