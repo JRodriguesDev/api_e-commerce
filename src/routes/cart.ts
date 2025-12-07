@@ -1,8 +1,7 @@
 import type {FastifyInstance} from 'fastify'
 import cookie from '@fastify/cookie'
-import {opt_cart_create} from '#schemas/cart.js'
+import {opt_cart_create, opt_cart_update, opt_cart_delete, opt_cart_get} from '#schemas/cart.js'
 import {Cart, CartItem} from '#interfaces'
-import { connect } from 'http2'
 
 export const cart = async (fastify: FastifyInstance) => {
     fastify.register(cookie, {secret: process.env.COOKIE_SECRET, hook: 'onRequest'})
@@ -23,6 +22,64 @@ export const cart = async (fastify: FastifyInstance) => {
                 select: { quantity: true, productId: true}
             })
             return res.status(200).send({cart_item})
+        } catch (err) {
+            return res.status(401).send({message: 'User Not Found or Unauthorized'})
+        }
+    })
+    fastify.patch('/:cartId', opt_cart_update, async (req, res) => {
+        const {id} = req.user! as {id: string} 
+        const {cartId} = req.params as {cartId: string}
+        const {quantity} = req.body as {quantity: number}
+        try {
+            const cart_item = await fastify.prisma.cartItem.update({
+                where: {id: cartId},
+                data: {
+                    quantity
+                },
+                select: {quantity: true, productId: true}
+            })
+            return res.status(200).send({cart_item})
+        } catch (err) {
+            return res.status(401).send({message: 'User Not Found or Unauthorized'})
+        }
+    })
+    fastify.delete('/:cartId', opt_cart_delete, async (req, res) => {
+        const {cartId} = req.params as {cartId: string}
+        try {
+            const cart_item = await fastify.prisma.cartItem.delete({
+                where: {id: cartId},
+                select: {productId: true}
+            })
+            return res.status(200).send({cart_item})
+        } catch (err) {
+            return res.status(401).send({message: 'User Not Found or Unauthorized'})
+        }
+    })
+    fastify.get('/', opt_cart_get, async (req, res) => {
+        const {id} = req.user! as {id: string}
+        try {
+            const cart = await fastify.prisma.cart.findUnique({
+                where: {userId: id},
+                include: {
+                    items: {select: {cartId: true, productId: true, quantity: true}}
+                }
+            })
+            const products = await fastify.prisma.product.findMany({
+                where: {id: {
+                    in: cart?.items.map(el => el.productId)
+                }},
+                select: {
+                    id: true,
+                    thumbnail: true,
+                    title: true,
+                    price: true,
+                }
+            })
+            const data = products.map(product => {
+                const item = cart?.items.find(i => i.productId === product.id)
+                return {...product, quantity: item?.quantity}
+            })
+            return res.status(200).send({data})
         } catch (err) {
             return res.status(401).send({message: 'User Not Found or Unauthorized'})
         }

@@ -58,7 +58,7 @@ export const user = async (fastify: FastifyInstance) => {
             const user = await fastify.prisma.user.findUnique({
                 where: {id: req.user!.id},
                 omit: {password: true},
-                include: {reviews: true, products: true, cart: true}
+                include: {reviews: true, products: true, cart: {select: {items: true}}}
             })
             return res.status(200).send({user: {name: user!.name, email: user!.email,role: user!.role , reviews: user!.reviews, products: user!.products, cart: user!.cart}})
         } catch (err) {
