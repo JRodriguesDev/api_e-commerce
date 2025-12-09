@@ -5,16 +5,19 @@ import {generate_token} from '#utils/jwt.js'
 import cookie from '@fastify/cookie'
 import bcrypt from 'bcryptjs'
 import {User} from '#interfaces'
+import {create_customer} from '#stripe/customer.js'
 
 export const user = async (fastify: FastifyInstance) => {
     fastify.register(cookie, {secret: process.env.COOKIE_SECRET, hook: 'onRequest'})
     fastify.post('/', opt_user_create, async (req, res) => {
         const {name, email, password} = req.body as User
         try {
+            const stripe = await create_customer({name: name, email: email})
             const user = await fastify.prisma.user.create({
                 data: {
                     name,
                     email,
+                    customerId: stripe.id,
                     password: await bcryptjs.hash(password, 10)
                 },
                 omit: {password: true}
@@ -31,7 +34,7 @@ export const user = async (fastify: FastifyInstance) => {
             return res
                 .setCookie('token', token, {httpOnly: true, secure: true, sameSite: 'strict', path: '/', signed: true})
                 .code(201)
-                .send({user: {name: user.name, email: user.email}, cart})
+                .send({user: {customerId: user.customerId, name: user.name, email: user.email}, cart})
         } catch (err) {
             return res.status(500).send({message: 'Internal Server Error'})
         }

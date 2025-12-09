@@ -20,7 +20,8 @@
             "#schemas/*": ["./src/validations/schemas/*"],
             "#zod*": ["./src/validations/zod/*"],
             "#utils/*": ["./src/utils/*"],
-            "#middllewares": ["./src/validations/middlewares/index.ts"]
+            "#middllewares": ["./src/validations/middlewares/index.ts"],
+            "#stripe/*": ["./src/services/stripe/*"]
         }
 
     },

@@ -24,6 +24,8 @@
     "fastify": "^5.6.2",
     "fastify-plugin": "^5.1.0",
     "jose": "^6.1.2",
+    "stripe": "^20.0.0",
+    "uuid": "^13.0.0",
     "zod": "^4.1.13"
   },
   "imports": {
@@ -36,13 +38,20 @@
     "#hooks_global": [
       "./build/hooks/global/index.js"
     ],
-    "#schemas/*": ["./build/validations/schemas/*"],
+    "#schemas/*": [
+      "./build/validations/schemas/*"
+    ],
     "#zod/*": [
       "./build/validations/zod/*"
     ],
     "#utils/*": [
       "./build/utils/*"
     ],
-    "#middllewares": ["./build/validations/middlewares/index.js"]
+    "#middllewares": [
+      "./build/validations/middlewares/index.js"
+    ],
+    "#stripe/*": [
+      "./build/services/stripe/*"
+    ]
   }
 }
