@@ -17,5 +17,5 @@ model CartItem {
     cartId String
 
     @@unique([cartId, productId])
-    @@map("cartItem")
+    @@map("cart_item")
 }

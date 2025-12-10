@@ -5,12 +5,12 @@ model User {
     password String
     role Role @default(USER)
 
-    customerId String
-
     cart Cart?
     products Product[]
     reviews Reviews[]
-    
+
+    stripe_profile Profile?
+
     @@map("users")
 }
 

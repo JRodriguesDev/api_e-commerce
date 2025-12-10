@@ -5,22 +5,27 @@ import {generate_token} from '#utils/jwt.js'
 import cookie from '@fastify/cookie'
 import bcrypt from 'bcryptjs'
 import {User} from '#interfaces'
-import {create_customer} from '#stripe/customer.js'
+import {create_customer, update_user} from '#stripe_core/customer.js'
 
 export const user = async (fastify: FastifyInstance) => {
     fastify.register(cookie, {secret: process.env.COOKIE_SECRET, hook: 'onRequest'})
     fastify.post('/', opt_user_create, async (req, res) => {
         const {name, email, password} = req.body as User
         try {
-            const stripe = await create_customer({name: name, email: email})
+            const stripe_profile = await create_customer({name: name, email: email})
             const user = await fastify.prisma.user.create({
                 data: {
                     name,
                     email,
-                    customerId: stripe.id,
                     password: await bcryptjs.hash(password, 10)
                 },
                 omit: {password: true}
+            })
+            await fastify.prisma.profile.create({
+                data: {
+                    id: stripe_profile.id,
+                    user: {connect: {id: user.id}}
+                }
             })
             const cart = await fastify.prisma.cart.create({
                 data: {
@@ -30,13 +35,13 @@ export const user = async (fastify: FastifyInstance) => {
                     items: true
                 }
             })
-            const token = await generate_token({id: user.id, role: user.role})
+            const token = await generate_token({id: user.id, customerId: stripe_profile.id, role: user.role})
             return res
                 .setCookie('token', token, {httpOnly: true, secure: true, sameSite: 'strict', path: '/', signed: true})
                 .code(201)
-                .send({user: {customerId: user.customerId, name: user.name, email: user.email}, cart})
+                .send({user: {name: user.name, email: user.email}, cart})
         } catch (err) {
-            return res.status(500).send({message: 'Internal Server Error'})
+            return res.status(500).send({message: `Internal Server Error ${err}`})
         }
     })
     fastify.post('/login', opt_user_login, async (req, res) => {
@@ -44,10 +49,10 @@ export const user = async (fastify: FastifyInstance) => {
         try {
             const user = await fastify.prisma.user.findUnique({
                 where: {email},
-                include: {cart: true}
+                include: {stripeProfile: {select: {id: true}}, cart: true}
             })
             if (!(await bcryptjs.compare(password, user!.password))) return {verify: 'Password Incorrect'}
-            const token = await generate_token({id: user!.id, role: user!.role})
+            const token = await generate_token({id: user!.id, customerId: user?.stripeProfile?.id, role: user!.role})
             return res
                 .setCookie('token', token, {httpOnly: true, secure: true, sameSite: 'strict', path: '/', signed: true})
                 .status(200)
@@ -112,8 +117,12 @@ export const user = async (fastify: FastifyInstance) => {
                     name: name,
                     email: email
                 },
-                omit: {password: true}
+                omit: {password: true},
+                include: {
+                    stripeProfile: {select: {id: true}}
+                }
             })
+            await update_user(user.stripeProfile!.id, {name, email})
             return res
                 .status(200)
                 .send({user: {name: user!.name, email: user!.email}})

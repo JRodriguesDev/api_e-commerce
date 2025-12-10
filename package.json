@@ -50,8 +50,6 @@
     "#middllewares": [
       "./build/validations/middlewares/index.js"
     ],
-    "#stripe/*": [
-      "./build/services/stripe/*"
-    ]
+    "#stripe_core/*": ["./build/services/stripe/core/*"]
   }
 }
