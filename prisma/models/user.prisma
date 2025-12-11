@@ -9,7 +9,7 @@ model User {
     products Product[]
     reviews Reviews[]
 
-    stripe_profile Profile?
+    stripeProfile StripeProfile?
 
     @@map("users")
 }

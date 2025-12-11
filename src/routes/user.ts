@@ -21,7 +21,7 @@ export const user = async (fastify: FastifyInstance) => {
                 },
                 omit: {password: true}
             })
-            await fastify.prisma.profile.create({
+            await fastify.prisma.stripeProfile.create({
                 data: {
                     id: stripe_profile.id,
                     user: {connect: {id: user.id}}
