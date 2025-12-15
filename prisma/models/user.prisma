@@ -8,8 +8,8 @@ model User {
     cart Cart?
     products Product[]
     reviews Reviews[]
-
     stripeProfile StripeProfile?
+    orders Order[]
 
     @@map("users")
 }

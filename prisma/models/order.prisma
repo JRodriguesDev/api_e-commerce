@@ -1,0 +1,38 @@
+model Order {
+    id String @id @default(nanoid())
+
+    status OrderStatus @default(PENDING)
+    items OrderItem[]
+    totalAmount Float
+    stripePaymentIntentId String @unique
+
+    user User @relation(fields: [userId], references: [id])
+    userId String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    @@map("orders")
+}
+
+model OrderItem {
+    id String @id @default(nanoid())
+
+    productId String
+    productName String
+    quantity Int
+    unitPriceAtPurchase Float
+
+    order Order @relation(fields: [orderId], references: [id])
+    orderId String
+
+    @@map("order_items")
+}
+
+enum OrderStatus {
+    PENDING
+    PAID
+    PROCESSING
+    SHIPPED
+    DELIVERED
+    CANCELED
+}

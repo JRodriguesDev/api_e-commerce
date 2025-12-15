@@ -1,10 +1,9 @@
-import type Stripe from 'stripe'
 import {v4 as uuid} from 'uuid'
 
 import stripe from '../index.js'
 import { User } from '#interfaces'
 
-export const create_customer = async (data: Pick<User, 'name' | 'email'>): Promise<Stripe.Customer> => {
+export const create_customer = async (data: Pick<User, 'name' | 'email'>) => {
     const costumer = await stripe.customers.create(
         {
             name: data.name,
@@ -18,7 +17,7 @@ export const create_customer = async (data: Pick<User, 'name' | 'email'>): Promi
     return costumer
 }
 
-export const update_user = async (id: string, data: Pick<User, | 'name' | 'email'>): Promise<Stripe.Customer> => {
+export const update_user = async (id: string, data: Pick<User, | 'name' | 'email'>) => {
     const customer = await stripe.customers.update(id, {
         ...data
     })

@@ -21,7 +21,8 @@
             "#zod*": ["./src/validations/zod/*"],
             "#utils/*": ["./src/utils/*"],
             "#middllewares": ["./src/validations/middlewares/index.ts"],
-            "#stripe_core/*": ["./src/services/stripe/core/*"]
+            "#stripe_core/*": ["./src/services/stripe/core/*"],
+            "stripe_checkout/*": ["./src/services/stripe/checkout/*"]
         }
 
     },
