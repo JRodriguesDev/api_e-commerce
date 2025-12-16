@@ -1,6 +1,5 @@
 import type {FastifyInstance} from 'fastify'
 import {opt_user_create, opt_user_login, opt_user_password, opt_user_search, opt_user_find, opt_user_update, opt_user_delete, opt_user_get} from '../validations/schemas/user.js'
-import bcryptjs from 'bcryptjs'
 import {generate_token} from '#utils/jwt.js'
 import cookie from '@fastify/cookie'
 import bcrypt from 'bcryptjs'
@@ -20,7 +19,7 @@ export const user = async (fastify: FastifyInstance) => {
                 data: {
                     name,
                     email,
-                    password: await bcryptjs.hash(password, 10)
+                    password: await bcrypt.hash(password, 10)
                 },
                 omit: {password: true}
                 })
@@ -110,7 +109,7 @@ export const user = async (fastify: FastifyInstance) => {
                 where: {email},
                 include: {stripeProfile: {select: {id: true}}, cart: true}
             })
-            if (!(await bcryptjs.compare(password, user!.password))) return {verify: 'Password Incorrect'}
+            if (!(await bcrypt.compare(password, user!.password))) return {verify: 'Password Incorrect'}
             const token = await generate_token({id: user!.id, customerId: user?.stripeProfile?.id, role: user!.role})
             return res
                 .setCookie('token', token, {httpOnly: true, secure: true, sameSite: 'strict', path: '/', signed: true})

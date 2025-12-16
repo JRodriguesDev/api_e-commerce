@@ -5,17 +5,21 @@ model Cart {
     user User @relation(fields: [userId], references: [id])
     userId String @unique
 
-    @@map("cart")
+    @@map("carts")
 }
 
 model CartItem {
     id String @id @default(nanoid())
     quantity Int @default(1)
     productId String
+    title String
+    description String
+    images String[]
+    price Float
 
     cart Cart @relation(fields: [cartId], references: [id])
     cartId String
 
     @@unique([cartId, productId])
-    @@map("cart_item")
+    @@map("cart_items")
 }

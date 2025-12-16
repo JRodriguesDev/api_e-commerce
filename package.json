@@ -51,6 +51,6 @@
       "./build/validations/middlewares/index.js"
     ],
     "#stripe_core/*": ["./build/services/stripe/core/*"],
-    "stripe_checkout/*": ["./build/services/stripe/checkout/*"]
+    "#stripe_checkout/*": ["./build/services/stripe/checkout/*"]
   }
 }

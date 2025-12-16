@@ -9,6 +9,15 @@ export const cart = async (fastify: FastifyInstance) => {
         const {id} = req.user! as {id: string}
         const {productId, quantity} = req.body as CartItem
         try {
+            const product = await fastify.prisma.product.findUnique({
+                where: {id: productId},
+                select: {
+                    images: true,
+                    title: true,
+                    description: true,
+                    price: true,
+                }
+            })
             const cart_id = await fastify.prisma.cart.findUnique({
                 where: {userId: id},
                 select: {id: true}
@@ -17,13 +26,14 @@ export const cart = async (fastify: FastifyInstance) => {
                 data: {
                     cart: {connect: {id: cart_id!.id}},
                     productId: productId,
-                    quantity: quantity 
+                    quantity: quantity,
+                    ...product!
                 },
                 select: { quantity: true, productId: true}
             })
             return res.status(200).send({cart_item})
         } catch (err) {
-            return res.status(401).send({message: 'User Not Found or Unauthorized'})
+            return res.status(401).send({message: `ser Not Found or Unauthorized ${err}`})
         }
     })
     fastify.patch('/:cartId', opt_cart_update, async (req, res) => {

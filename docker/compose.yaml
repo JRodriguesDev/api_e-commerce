@@ -26,6 +26,14 @@ services:
       - api
     depends_on:
       - postgres
+  stripe_cli:
+    image: stripe/stripe-cli:latest
+    container_name: stripe
+    command: listen --forward-to http://node:3000/webhooks/stripe
+    networks:
+      - api
+    depends_on:
+      - node
 volumes:
   postgres-volume:
   prisma-migrate:

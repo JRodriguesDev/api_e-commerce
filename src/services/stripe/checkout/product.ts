@@ -1,15 +1,15 @@
 import stripe from '../index.js'
 
-import {ProductList} from '#interfaces'
+import {StripeLineItem} from '#interfaces'
 
-export const create_session = async (id: string, customer: string, email: string, items: ProductList) => {
+export const create_session = async (id: string, customer: string, items: StripeLineItem[]) => {
     const session = await stripe.checkout.sessions.create({
         metadata: {orderId: id},
         customer: customer,
-        customer_email: email,
-        line_items: [],
+        line_items: items,
         mode: 'payment',
-        return_url: 'return',
-        success_url: 'sucess'
+        cancel_url: 'http://return',
+        success_url: 'http://sucess'
     })
+    return session
 }

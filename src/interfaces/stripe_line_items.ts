@@ -1,4 +1,4 @@
-export interface ProductList {
+export interface StripeLineItem {
     quantity: number
     price_data: {
         currency: string,
@@ -6,7 +6,7 @@ export interface ProductList {
         product_data: {
             name: string,
             description: string,
-            images?: string[]
+            images: string[]
         },
         recurring?: {interval: 'day' | 'week' | 'month' | 'year'}
     }
