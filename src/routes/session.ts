@@ -4,6 +4,7 @@ import {opt_session_create} from '#schemas/session.js'
 import {create_session} from '#stripe_checkout/product.js'
 import {StripeLineItem} from '#interfaces'
 
+
 export const session = async (fastify: FastifyInstance) => {
     fastify.register(cookie, {secret: process.env.COOKIE_SECRET, hook: 'onRequest'})
 
@@ -53,6 +54,10 @@ export const session = async (fastify: FastifyInstance) => {
                 return new_order
             })
             const session = await create_session(order_data.id, user!.stripeProfile!.id, line_items)
+            await fastify.prisma.order.update({
+                where: {id: session.metadata!.orderId},
+                data: {stripeSessionId: session.id}
+            })
             return res.status(200).send(session)
         } catch (err) {
             return res.status(401).send({message: `User Not Found or Unauthorized ${err}`})

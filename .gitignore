@@ -1,4 +1,5 @@
 .env
+redis.conf
 node_modules/
 src/prisma/
 build/

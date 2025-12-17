@@ -14,6 +14,7 @@
 
         "paths": {
             "#prisma": ["./src/services/prisma/index.ts"],
+            "#prisma_stripe/*": ["./src/services/prisma/stripe_handler/*"],
             "#fastify_plugins": ["./src/services/fastify_plugins/index.ts"],
             "#hooks_global": ["./src/hooks/global/index.ts"],
             "#interfaces": ["./src/interfaces/index.ts"],
@@ -22,7 +23,8 @@
             "#utils/*": ["./src/utils/*"],
             "#middllewares": ["./src/validations/middlewares/index.ts"],
             "#stripe_core/*": ["./src/services/stripe/core/*"],
-            "#stripe_checkout/*": ["./src/services/stripe/checkout/*"]
+            "#stripe_checkout/*": ["./src/services/stripe/checkout/*"],
+            "#stripe_hooks/*" : ["./src/services/stripe/hooks/*"]
         }
 
     },

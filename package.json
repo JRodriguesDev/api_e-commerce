@@ -32,6 +32,7 @@
     "#prisma": [
       "./build/services/prisma/index.js"
     ],
+    "#prisma_stripe/*": ["./build/services/prisma/stripe_handler/*"],
     "#fastify_plugins": [
       "./build/utils/fastify_plugins/index.js"
     ],
@@ -51,6 +52,7 @@
       "./build/validations/middlewares/index.js"
     ],
     "#stripe_core/*": ["./build/services/stripe/core/*"],
-    "#stripe_checkout/*": ["./build/services/stripe/checkout/*"]
+    "#stripe_checkout/*": ["./build/services/stripe/checkout/*"],
+    "#stripe_hooks/*" : ["./build/services/stripe/hooks/*"]
   }
 }

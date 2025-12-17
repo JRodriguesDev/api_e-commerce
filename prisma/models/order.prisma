@@ -4,6 +4,7 @@ model Order {
     status OrderStatus @default(PENDING)
     items OrderItem[]
     totalAmount Float?
+    stripeSessionId String?
     stripePaymentIntentId String? @unique
 
     user User @relation(fields: [userId], references: [id])

@@ -34,9 +34,23 @@ services:
       - api
     depends_on:
       - node
+  redis:
+    build: 
+      context: ..
+      dockerfile: docker/redis.dockerfile
+    container_name: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - redis-cache:/data
+    networks:
+      - api
+    depends_on:
+      - node
 volumes:
   postgres-volume:
   prisma-migrate:
+  redis-cache:
 networks:
   api:
     driver: bridge

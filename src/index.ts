@@ -1,5 +1,6 @@
 import Fastify from "fastify";
 import routes from "./routes/index.js";
+import hooks from './hooks/index.js'
 import {prisma_plugin} from './services/fastify_plugins/index.js'
 
 const fastify = Fastify({
@@ -8,6 +9,9 @@ const fastify = Fastify({
 
 //Plugins
 fastify.register(prisma_plugin)
+
+//Routes
+await hooks(fastify)
 
 //Routes
 await routes(fastify)
