@@ -17,12 +17,11 @@ export const payment_hook = async (fastify: FastifyInstance) => {
             console.log(`Evento ${event.type}`)
             switch (event.type) {
                 case 'payment_intent.created':
-                    console.log(event)
+                    //console.log(event)
                     //await state_process(event)
                     break;
                 case 'payment_intent.succeeded':
-                    console.log(event)
-                    //await state_paid(event)
+                    await state_paid(event)
                     break;
                 default: 
                     console.log(`Event Ignored: ${event.type}`)

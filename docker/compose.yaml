@@ -26,6 +26,7 @@ services:
       - api
     depends_on:
       - postgres
+      - redis
   stripe_cli:
     image: stripe/stripe-cli:latest
     container_name: stripe
@@ -41,12 +42,8 @@ services:
     container_name: redis
     ports:
       - 6379:6379
-    volumes:
-      - redis-cache:/data
     networks:
       - api
-    depends_on:
-      - node
 volumes:
   postgres-volume:
   prisma-migrate:

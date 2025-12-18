@@ -24,7 +24,8 @@
             "#middllewares": ["./src/validations/middlewares/index.ts"],
             "#stripe_core/*": ["./src/services/stripe/core/*"],
             "#stripe_checkout/*": ["./src/services/stripe/checkout/*"],
-            "#stripe_hooks/*" : ["./src/services/stripe/hooks/*"]
+            "#stripe_hooks/*" : ["./src/services/stripe/hooks/*"],
+            "#stripe_cahce/*": ["./src/services/redis/stripe_cache/*"]
         }
 
     },

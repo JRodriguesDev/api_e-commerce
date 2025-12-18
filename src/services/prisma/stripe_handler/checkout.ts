@@ -1,5 +1,6 @@
 import prisma from '#prisma'
 import type {Stripe} from 'stripe'
+import {get_cache} from '#stripe_cahce/orders.js'
 
 export const state_process = async (event: Stripe.PaymentIntentCreatedEvent) => {
     await prisma.order.update({
@@ -13,7 +14,7 @@ export const state_process = async (event: Stripe.PaymentIntentCreatedEvent) => 
 
 export const state_paid = async (event: Stripe.PaymentIntentSucceededEvent) => {
     await prisma.order.update({
-        where: {stripePaymentIntentId: event.data.object.id},
+        where: {id: await get_cache('order')},
         data: {status: 'PAID'}
     })
 }
