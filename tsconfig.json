@@ -25,7 +25,8 @@
             "#stripe_core/*": ["./src/services/stripe/core/*"],
             "#stripe_checkout/*": ["./src/services/stripe/checkout/*"],
             "#stripe_hooks/*" : ["./src/services/stripe/hooks/*"],
-            "#stripe_cahce/*": ["./src/services/redis/stripe_cache/*"]
+            "#stripe_cahce/*": ["./src/services/redis/stripe_cache/*"],
+            "#logic_orders/*": ["./src/logic/orders/*"]
         }
 
     },

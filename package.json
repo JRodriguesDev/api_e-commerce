@@ -63,6 +63,7 @@
     "#stripe_hooks/*": [
       "./build/services/stripe/hooks/*"
     ],
-    "#stripe_cahce/*": ["./build/services/redis/stripe_cache/*"]
+    "#stripe_cahce/*": ["./build/services/redis/stripe_cache/*"],
+    "#logic_orders/*": ["./build/logic/orders/*"]
   }
 }

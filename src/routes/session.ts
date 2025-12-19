@@ -3,7 +3,6 @@ import cookie from '@fastify/cookie'
 import {opt_session_create} from '#schemas/session.js'
 import {create_session} from '#stripe_checkout/product.js'
 import {StripeLineItem} from '#interfaces'
-import {set_cahce} from '#stripe_cahce/orders.js'
 
 
 export const session = async (fastify: FastifyInstance) => {
@@ -54,7 +53,6 @@ export const session = async (fastify: FastifyInstance) => {
                 )
                 return new_order
             })
-            await set_cahce('order', order_data.id)
             const session = await create_session(order_data.id, user!.stripeProfile!.id, line_items)
             await fastify.prisma.order.update({
                 where: {id: session.metadata!.orderId},

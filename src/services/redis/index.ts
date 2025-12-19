@@ -6,6 +6,8 @@ const cache = new BasicClientSideCache({
     evictPolicy: 'LRU'
 })
 
+cache.clear()
+
 const client = createClient({url: process.env.REDIS_URL, RESP: 3,
     clientSideCache: cache
 })
