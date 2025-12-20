@@ -2,7 +2,7 @@ import type {Stripe} from 'stripe'
 import type { FastifyInstance, FastifyRequest} from 'fastify'
 import stripe  from '../index.js'
 import {set_payment_cache, set_session_cache} from '#stripe_cahce/orders.js'
-import {finalize_order} from '#logic_orders/finalize.js'
+import {finalize_paid_order, finalize_expire_order} from '#logic_orders/finalize.js'
 import {orderCache} from '#interfaces'
     
 export const payment_hook = async (fastify: FastifyInstance) => {
@@ -19,17 +19,25 @@ export const payment_hook = async (fastify: FastifyInstance) => {
             console.log(`Evento ${event.type}`)
             switch (event.type) {
                 case 'checkout.session.completed':
-                    const data = {
+                    let data_complete = {
                         payment_intent_id: event.data.object.payment_intent as string,
                         session_id: event.data.object.id,
                         order_id: event.data.object.metadata!.orderId!
                     } satisfies orderCache 
-                    await set_session_cache(event.data.object.customer as string, data)
-                    await finalize_order(event.data.object.customer as string)
+                    await set_session_cache(event.data.object.customer as string, data_complete)
+                    await finalize_paid_order(event.data.object.customer as string)
                     break;
                 case 'payment_intent.succeeded':
                     await set_payment_cache(event.data.object.customer as string, {payment_intent_id: event.data.object.id})
-                    await finalize_order(event.data.object.customer as string)
+                    await finalize_paid_order(event.data.object.customer as string)
+                    break;
+                case 'checkout.session.expired':
+                    let data_expire = {
+                        session_id: event.data.object.id,
+                        order_id: event.data.object.metadata!.orderId!
+                    } satisfies orderCache 
+                    await set_session_cache(event.data.object.customer as string, data_expire)
+                    await finalize_expire_order(event.data.object.customer as string)
                     break;
                 default: 
                     console.log(`Event Ignored: ${event.type}`)

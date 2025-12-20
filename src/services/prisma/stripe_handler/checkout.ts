@@ -3,14 +3,20 @@ import type {Stripe} from 'stripe'
 import {orderCache} from '#interfaces'
 
 
-export const state_process = async (event: Stripe.PaymentIntentCreatedEvent) => {
-    await prisma.order.update({
-        where: {id: event.data.object.metadata!.orderId},
-        data: {
-            stripePaymentIntentId: event.data.object.id as string,
-            status: 'PROCESSING'
-        }
-    })
+export const state_expire = async (data: orderCache) => {
+    try {
+        console.log(data)
+        const order = await prisma.order.update({
+            where: {id: data.order_id},
+            data: {
+                status: 'EXPIRE',
+                stripeSessionId: data.session_id,
+            }
+        })
+        console.log(order)
+    } catch (err) {
+        console.log(`Prisma ERR: ${err}`)
+    }
 }
 
 export const state_paid = async (data: orderCache) => {
