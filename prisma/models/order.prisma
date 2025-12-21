@@ -36,6 +36,6 @@ enum OrderStatus {
     SHIPPED
     DELIVERED
     CANCELED
-    REFUSED
+    FAILED
     EXPIRE
 }

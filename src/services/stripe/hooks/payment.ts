@@ -31,10 +31,14 @@ export const payment_hook = async (fastify: FastifyInstance) => {
                     await set_payment_cache(event.data.object.customer as string, {payment_intent_id: event.data.object.id})
                     await finalize_paid_order(event.data.object.customer as string)
                     break;
+                case 'payment_intent.payment_failed':
+                    await set_payment_cache(event.data.object.customer as string, {payment_intent_id: event.data.object.id})
+                    break;
                 case 'checkout.session.expired':
                     let data_expire = {
                         session_id: event.data.object.id,
-                        order_id: event.data.object.metadata!.orderId!
+                        order_id: event.data.object.metadata!.orderId!,
+                        payment_intent_id: event.data.object.payment_intent as string
                     } satisfies orderCache 
                     await set_session_cache(event.data.object.customer as string, data_expire)
                     await finalize_expire_order(event.data.object.customer as string)

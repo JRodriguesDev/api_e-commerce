@@ -1,11 +1,15 @@
 import client from '../index.js'
 import {orderCache} from '#interfaces'
+import type stripe from 'stripe'
+
 
 export const set_session_cache = async (key: string, data: orderCache) => {
+    if (data.payment_intent_id == null) data.payment_intent_id = ''  
     await client.hSet(`session:${key}`, {
         ...data
-    } satisfies orderCache)
+    })
     await client.expire(`session:${key}`, 3600)
+    console.log('set')
 }
 
 export const set_payment_cache = async (key: string, data: orderCache) => {
