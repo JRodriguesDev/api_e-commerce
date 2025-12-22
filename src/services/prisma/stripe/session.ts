@@ -1,6 +1,6 @@
 import prisma from '#prisma'
 import type {Stripe} from 'stripe'
-import {orderCache} from '#interfaces'
+import {orderCache} from '#interfaces/order.js'
 
 
 export const state_expire = async (data: orderCache) => {
@@ -9,7 +9,6 @@ export const state_expire = async (data: orderCache) => {
             where: {id: data.order_id},
             data: {
                 status: 'EXPIRE',
-                stripeSessionId: data.session_id,
             }
         })
     } catch (err) {
@@ -23,7 +22,6 @@ export const state_failed = async (data: orderCache) => {
             where: {id: data.order_id},
             data: {
                 status: 'FAILED',
-                stripeSessionId: data.session_id,
                 stripePaymentIntentId: data.payment_intent_id
             }
         })
@@ -39,7 +37,6 @@ export const state_paid = async (data: orderCache) => {
             data: {
                 status: 'PAID',
                 stripePaymentIntentId: data.payment_intent_id,
-                stripeSessionId: data.session_id
             }
         })
     } catch (err) {

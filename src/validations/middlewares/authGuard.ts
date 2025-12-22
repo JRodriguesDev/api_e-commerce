@@ -1,5 +1,5 @@
 import type { FastifyRequest, FastifyReply } from 'fastify'
-import {verify_token} from '#utils/jwt.js'
+import {verify_token} from '../../services/jwt/index.js'
 
 export const auth_guard = async (req: FastifyRequest, res: FastifyReply) => {
     if (!req.cookies.token) return res.status(428).send("Cookie Necessary")

@@ -13,19 +13,22 @@
         "outDir": "./build",
 
         "paths": {
-            "#prisma": ["./src/services/prisma/index.ts"],
-            "#prisma_stripe/*": ["./src/services/prisma/stripe_handler/*"],
             "#fastify_plugins": ["./src/services/fastify_plugins/index.ts"],
             "#hooks_global": ["./src/hooks/global/index.ts"],
-            "#interfaces": ["./src/interfaces/index.ts"],
+            "#interfaces/*": ["./src/interfaces/*"],
             "#schemas/*": ["./src/validations/schemas/*"],
             "#zod*": ["./src/validations/zod/*"],
             "#utils/*": ["./src/utils/*"],
             "#middllewares": ["./src/validations/middlewares/index.ts"],
+            
+            "#prisma": ["./src/services/prisma/index.ts"],
+            "#prisma_stripe/*": ["./src/services/prisma/stripe/*"],
+            "#prisma_routes/*": ["./src/services/prisma/routes/*"],
+
             "#stripe_core/*": ["./src/services/stripe/core/*"],
-            "#stripe_checkout/*": ["./src/services/stripe/checkout/*"],
+            "#stripe_checkout/*": ["./src/services/stripe/session/*"],
             "#stripe_hooks/*" : ["./src/services/stripe/hooks/*"],
-            "#stripe_cahce/*": ["./src/services/redis/stripe_cache/*"],
+            "#stripe_cahce/*": ["./src/services/redis/stripe/*"],
             "#logic_orders/*": ["./src/logic/orders/*"]
         }
 

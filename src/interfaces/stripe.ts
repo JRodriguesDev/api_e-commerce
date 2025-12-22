@@ -1,3 +1,7 @@
+export interface stripeProfile {
+    id: string
+}
+
 export interface StripeLineItem {
     quantity: number
     price_data: {

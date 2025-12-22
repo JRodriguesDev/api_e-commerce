@@ -3,8 +3,7 @@ model User {
     name String
     email String @unique
     password String
-    role Role @default(USER)
-
+    role UserRole[]
     cart Cart?
     products Product[]
     reviews Reviews[]
@@ -14,7 +13,25 @@ model User {
     @@map("users")
 }
 
-enum Role {
+model Role {
+    id String @id @default(nanoid())
+    name RoleType
+    users UserRole[]
+
+    @@map("roles")
+}
+
+model UserRole {
+    user User @relation(fields: [userId], references: [id])
+    userId String
+    role Role @relation(fields: [roleId], references: [id])
+    roleId String
+
+    @@id([userId, roleId])
+    @@map("user_roles")
+}
+
+enum RoleType {
     USER
     ADMIN
 }

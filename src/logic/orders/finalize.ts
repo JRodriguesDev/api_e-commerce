@@ -1,6 +1,6 @@
-import {get_cache} from '#stripe_cahce/orders.js'
-import {state_paid, state_expire, state_failed} from '#prisma_stripe/checkout.js'
-import {orderCache} from '#interfaces'
+import {get_cache} from '../../services/redis/stripe/session.js'
+import {state_paid, state_expire, state_failed} from '../../services/prisma/stripe/session.js'
+import {orderCache} from '#interfaces/order.js'
 
 export const finalize_paid_order = async (customer_id: string) => {
     const session_cache = await get_cache(`session:${customer_id}`)

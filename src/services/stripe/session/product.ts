@@ -1,6 +1,6 @@
 import stripe from '../index.js'
 
-import {StripeLineItem} from '#interfaces'
+import {StripeLineItem} from '#interfaces/stripe.js'
 
 export const create_session = async (id: string, customer: string, items: StripeLineItem[]) => {
     const session = await stripe.checkout.sessions.create({

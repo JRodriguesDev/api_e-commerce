@@ -1,10 +1,10 @@
 {
   "name": "api_e-commerce",
   "description": "Este projeto envolve a criação de uma API backend para uma loja online",
-  "main": "build/index.js",
+  "main": "build/app.js",
   "type": "module",
   "scripts": {
-    "dev": "tsx --env-file=.env src/index.ts",
+    "dev": "tsx --env-file=.env src/app.ts",
     "build": "tsc && cpx \"src/prisma/client/*.node\" build/prisma/client",
     "start": "node ."
   },
@@ -30,12 +30,6 @@
     "zod": "^4.1.13"
   },
   "imports": {
-    "#prisma": [
-      "./build/services/prisma/index.js"
-    ],
-    "#prisma_stripe/*": [
-      "./build/services/prisma/stripe_handler/*"
-    ],
     "#fastify_plugins": [
       "./build/utils/fastify_plugins/index.js"
     ],
@@ -54,16 +48,21 @@
     "#middllewares": [
       "./build/validations/middlewares/index.js"
     ],
+    "#prisma": [
+      "./build/services/prisma/index.js"
+    ],
+    "#prisma_stripe/*": [
+      "./build/services/prisma/stripe_handler/*"
+    ],
+    "#prisma_routes/*": ["./build/services/prisma/routes/*"],
     "#stripe_core/*": [
       "./build/services/stripe/core/*"
     ],
-    "#stripe_checkout/*": [
-      "./build/services/stripe/checkout/*"
-    ],
+    "#stripe_checkout/*": ["./build/services/stripe/session/*"],
     "#stripe_hooks/*": [
       "./build/services/stripe/hooks/*"
     ],
-    "#stripe_cahce/*": ["./build/services/redis/stripe_cache/*"],
+    "#stripe_cahce/*": ["./build/services/redis/stripe/*"],
     "#logic_orders/*": ["./build/logic/orders/*"]
   }
 }

@@ -1,6 +1,5 @@
 import client from '../index.js'
-import {orderCache} from '#interfaces'
-import type stripe from 'stripe'
+import {orderCache} from '#interfaces/order.js'
 
 
 export const set_session_cache = async (key: string, data: orderCache) => {

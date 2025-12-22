@@ -1,9 +1,10 @@
 import type {Stripe} from 'stripe'
 import type { FastifyInstance, FastifyRequest} from 'fastify'
+
 import stripe  from '../index.js'
-import {set_payment_cache, set_session_cache} from '#stripe_cahce/orders.js'
+import {set_payment_cache, set_session_cache} from '../../redis/stripe/session.js'
 import {finalize_paid_order, finalize_expire_order} from '#logic_orders/finalize.js'
-import {orderCache} from '#interfaces'
+import {orderCache} from '#interfaces/order.js'
     
 export const payment_hook = async (fastify: FastifyInstance) => {
     fastify.addContentTypeParser('application/json', {parseAs: 'buffer'}, async (req: FastifyRequest, payload: Buffer) => {return payload})

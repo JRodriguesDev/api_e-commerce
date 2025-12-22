@@ -1,119 +1,67 @@
 import type {FastifyInstance} from 'fastify'
-import {opt_pages_product, opt_product_create, opt_product_update, opt_user_delete, opt_find_product, opt_category_products} from '../validations/schemas/product.js'
-import { Product } from '#interfaces'
 import cookie from '@fastify/cookie'
+
+import {opt_pages_product, opt_product_create, opt_product_update, opt_user_delete, opt_find_product, opt_category_products} from '../validations/schemas/product.js'
+import {create_product, update_product, delete_product, pages_product, category_products, find_product} from '#prisma_routes/product.js'
+import { Product } from '#interfaces/product.js'
 
 export const product = async (fastify: FastifyInstance) => {
     fastify.register(cookie, {secret: process.env.COOKIE_SECRET, hook: 'onRequest'})
+
     fastify.post('/product', opt_product_create, async (req, res) => {
-        const {...data} = req.body as Product
         try {
-            const product = await fastify.prisma.product.create({
-                data: {
-                    ...data,
-                    owner: {connect: {id: req.user!.id}},
-                },
-                select: {title: true}
-            })
+            const {...data} = req.body as Product
+            const product = await create_product(req.user!.id, data)
             return res.status(201).send({product})
         } catch (err) {
             return res.status(500).send({message: `Internal Server ${err}`})
         }
     })
     fastify.patch('/product/:id', opt_product_update, async (req, res) => {
-        const {id} = req.params as {id: string}
-        const {...data} = req.body as Product
         try {
-            const product = await fastify.prisma.product.update({
-                where: {id: id, ownerId: req.user!.id},
-                data: {...data},
-                select: {title: true}
-            })
+            const {id} = req.params as {id: string}
+            const {...data} = req.body as Product
+            const product = await update_product(id, req.user!.id, data)
             return res.status(200).send({product})
         } catch (err) {
             return res.status(401).send({message: 'Product Not Found or Unauthorized'})
         }
     })
     fastify.delete('/product/:id', opt_user_delete, async (req, res) => {
-        const {id} = req.params as {id: string}
         try {
-            const product = await fastify.prisma.product.delete({
-                where: {id: id, ownerId: req.user!.id},
-                select: {title: true}
-            })
+            const {id} = req.params as {id: string}
+            await delete_product(id, req.user!.id)
             return res.status(200).send({message: 'sucess'})
         } catch (err) {
             return res.status(401).send({message: 'Product Not Found or Unauthorized'})
         }
     })
     fastify.get('/', opt_pages_product, async (req, res) => {
-        const {limit, page} = req.query as {limit: number, page: number}
-        const skip = (page - 1) * limit
         try {
-            const products = await fastify.prisma.product.findMany({
-                take: limit,
-                skip: skip,
-                select: {
-                    id: true,
-                    title: true,
-                    description: true,
-                    price: true,
-                    rating: true,
-                    category: true,
-                    thumbnail: true,
-                    owner: {select: {name: true}}
-                },
-            })
+            const {limit, page} = req.query as {limit: number, page: number}
+            const skip = (page - 1) * limit
+            const products = await pages_product(limit, skip)
             return res.status(200).send({products: products})
         } catch (err) {
             return res.status(500).send({message: 'Internal Server Error'})
         }
     })
     fastify.get('/:category', opt_category_products, async (req, res) => {
-        const {category} = req.params as {category: string}
-        const {limit, page} = req.query as {limit: number, page: number}
-        const skip = (page - 1) * limit
         try {
-            const products = await fastify.prisma.product.findMany({
-                where: {category: category},
-                take: limit,
-                skip: skip,
-                select: {
-                    id: true,
-                    title: true,
-                    description: true,
-                    price: true,
-                    rating: true,
-                    category: true,
-                    thumbnail: true,
-                    owner: {select: {name: true}}
-                },
-            })
+            const {category} = req.params as {category: string}
+            const {limit, page} = req.query as {limit: number, page: number}
+            const skip = (page - 1) * limit
+            const products = await category_products(category, limit, skip)
             return {products: products}
         } catch (err) {
             return res.status(400).send({message: `Category Not Found ${err}`})
         }
     })
     fastify.get('/product/:id', opt_find_product, async (req, res) => {
-        const {id} = req.params as {id: string}
         try {
-            const product = await fastify.prisma.product.findUnique({
-                where: {id},
-                omit: {thumbnail: true},
-                include: {
-                    reviews: {
-                        select: {
-                            comment: true, 
-                            date: true, 
-                            rating: true, 
-                            id: true, 
-                            author: {select: {name: true, id: true}}
-                        }},
-                        owner: {select: {name: true, id: true}
-                    }
-                }
-            })
-            return res.status(200).send({product})
+            const {id} = req.params as {id: string}
+            const products = find_product(id)
+            return res.status(200).send({products})
         } catch (err) {
             return res.status(400).send({message: 'Product Not Found'})
         }
