@@ -6,10 +6,11 @@ export const user_create = async (name: string, email: string, password: string,
             data: {
                 name,
                 email,
-                //roles: ['USER'],
-                password: password
+                password: password,
+                role: {create: {role: {connect: {name: 'ADMIN'}}}}
             },
-            omit: {password: true}
+            omit: {password: true},
+            include: {role: {select: {role: {select: {name: true}}}}}
         })
         await prisma.stripeProfile.create({
             data: {
@@ -73,7 +74,10 @@ export const user_delete = async (id: string) => {
 export const user_login = async (email: string) => {
     const user = await prisma.user.findUnique({
         where: {email},
-        include: {stripeProfile: {select: {id: true}}, cart: true}
+        include: {
+            stripeProfile: {select: {id: true}}, cart: true,
+            role: {select: {role: {select: {name: true}}}}
+        }
     })
     prisma.$disconnect()
     return user
@@ -83,7 +87,7 @@ export const user_get = async (id: string) => {
     const user = await prisma.user.findUnique({
         where: {id: id},
             omit: {password: true},
-            include: {reviews: true, products: true, cart: {select: {items: true}}}
+            include: {reviews: true, products: true, cart: {select: {items: true}}, role: {select: {role: {select: {name: true}}}}}
     })
     prisma.$disconnect()
     return user

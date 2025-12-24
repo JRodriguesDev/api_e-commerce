@@ -45,9 +45,7 @@
     "#utils/*": [
       "./build/utils/*"
     ],
-    "#middllewares": [
-      "./build/validations/middlewares/index.js"
-    ],
+    "#middllewares/*": ["./build/validations/middlewares/*"],
     "#prisma": [
       "./build/services/prisma/index.js"
     ],

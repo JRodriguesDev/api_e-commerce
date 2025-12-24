@@ -1,8 +1,9 @@
 import type {RouteShorthandOptions} from 'fastify'
-import {auth_guard, admin_guard} from '#middllewares'
+import {auth_guard} from '#middllewares/authGuard.js'
+import {moderator_guard} from '#middllewares/adminGuard.js'
 
 export const opt_category_create: RouteShorthandOptions = {
-    preHandler: [auth_guard, admin_guard],
+    preHandler: [auth_guard, moderator_guard],
     schema: {
         body: {
             type: 'object',
@@ -15,7 +16,7 @@ export const opt_category_create: RouteShorthandOptions = {
 }
 
 export const opt_category_update: RouteShorthandOptions = {
-    preHandler: [auth_guard, admin_guard],
+    preHandler: [auth_guard, moderator_guard],
     schema: {
         body: {
             type: 'object',
@@ -30,5 +31,5 @@ export const opt_category_update: RouteShorthandOptions = {
 }
 
 export const opt_category_delete: RouteShorthandOptions = {
-    preHandler: [auth_guard, admin_guard]
+    preHandler: [auth_guard, moderator_guard]
 }

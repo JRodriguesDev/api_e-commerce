@@ -6,5 +6,10 @@ export const auth_guard = async (req: FastifyRequest, res: FastifyReply) => {
     const cookie = req.unsignCookie(req.cookies.token!)
     if (!cookie.valid) return res.status(401).send("Unauthorized")
     const token = await verify_token(cookie.value!)
-    req.user = {id: token.payload.id as string, customerId: token.payload.customerId as string, role: token.payload.role as string}
+    req.user = {id: token.payload.id as string, customerId: token.payload.customerId as string, roles: token.payload.roles as string[]}
+    if (!(req.user.roles?.includes('CUSTOMER'))) return res.status(401).send("Unauthorized")
+}
+
+export const seller_guard = async (req: FastifyRequest, res: FastifyReply) => {
+    if (!(req.user!.roles?.includes('SELLER'))) return res.status(401).send("Unauthorized")
 }

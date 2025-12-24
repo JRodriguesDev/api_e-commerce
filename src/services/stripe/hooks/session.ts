@@ -12,7 +12,6 @@ export const payment_hook = async (fastify: FastifyInstance) => {
     fastify.post('/webhooks/stripe', async (req, res) => {
         const sig = req.headers['stripe-signature'] as string
         const webhook_secret = process.env.STRIPE_CLI_SECRET!
-
         let event: Stripe.Event
         try {
             const raw_body = req.body as Buffer

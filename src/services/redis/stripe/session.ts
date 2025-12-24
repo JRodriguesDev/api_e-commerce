@@ -8,7 +8,6 @@ export const set_session_cache = async (key: string, data: orderCache) => {
         ...data
     })
     await client.expire(`session:${key}`, 3600)
-    console.log('set')
 }
 
 export const set_payment_cache = async (key: string, data: orderCache) => {

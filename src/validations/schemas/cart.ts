@@ -1,5 +1,5 @@
 import type {RouteShorthandOptions} from 'fastify'
-import {auth_guard} from '#middllewares'
+import {auth_guard} from '#middllewares/authGuard.js'
 
 export const opt_cart_create: RouteShorthandOptions = {
     preHandler: [auth_guard],

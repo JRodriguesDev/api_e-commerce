@@ -8,7 +8,7 @@ declare module 'fastify' {
         user?: {
             id: string,
             customerId: string,
-            role?: string
+            roles?: string[]
         }
     }
 }

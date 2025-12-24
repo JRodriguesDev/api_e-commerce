@@ -15,7 +15,7 @@ model User {
 
 model Role {
     id String @id @default(nanoid())
-    name RoleType
+    name String @unique
     users UserRole[]
 
     @@map("roles")
@@ -29,9 +29,4 @@ model UserRole {
 
     @@id([userId, roleId])
     @@map("user_roles")
-}
-
-enum RoleType {
-    USER
-    ADMIN
 }

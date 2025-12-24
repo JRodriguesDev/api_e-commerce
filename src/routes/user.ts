@@ -16,11 +16,12 @@ export const user = async (fastify: FastifyInstance) => {
             const {email, password} = req.body as User
             const user = await user_login(email)
             if (!(await bcrypt.compare(password, user!.password))) return {verify: 'Password Incorrect'}
-            const token = await generate_token({id: user!.id, customerId: user?.stripeProfile?.id, /*role: user!.roles*/})
+            const roles = user?.role.map(el => el.role.name)
+            const token = await generate_token({id: user!.id, customerId: user?.stripeProfile?.id, roles: roles})
             return res
                 .setCookie('token', token, {httpOnly: true, secure: true, sameSite: 'strict', path: '/', signed: true})
                 .status(200)
-                .send({user: {name: user!.name, email: user!.email}, cart: user!.cart})
+                .send({user: {name: user!.name, email: user!.email}, cart: user!.cart, roles: roles})
         } catch (err) {
             return res.status(400).send({message: 'Email not Found'})
         }
@@ -31,7 +32,8 @@ export const user = async (fastify: FastifyInstance) => {
             const hash_password = await bcrypt.hash(password, 10)
             const stripe_customer = await create_customer({name: name, email: email})
             const {user, cart} = await user_create(name, email, hash_password, stripe_customer.id)
-            const token = await generate_token({id: user.id, customerId: stripe_customer.id, /*role: user.*/})
+            const roles = user.role.map(el => el.role.name)
+            const token = await generate_token({id: user.id, customerId: stripe_customer.id, roles: roles})
             return res
                 .setCookie('token', token, {httpOnly: true, secure: true, sameSite: 'strict', path: '/', signed: true})
                 .code(201)
@@ -76,7 +78,7 @@ export const user = async (fastify: FastifyInstance) => {
     fastify.get('/', opt_user_get, async (req, res) => {
         try {
             const user = await user_get(req.user!.id)
-            return res.status(200).send({user: {name: user!.name, email: user!.email}, cart: user!.cart})
+            return res.status(200).send({user: {name: user!.name, email: user!.email}, cart: user!.cart, role: user!.role})
         } catch (err) {
             return res.status(401).send({message: 'User Not Found or Unauthorized'})
         }
