@@ -1,6 +1,5 @@
 import prisma  from '../index.js'
 import {StripeLineItem} from '#interfaces/stripe.js'
-import { it } from 'node:test'
 
 export const session_create = async (id: string) => {
     const user = await prisma.user.findUnique({
@@ -49,18 +48,3 @@ export const session_create = async (id: string) => {
     prisma.$disconnect()
     return {user, order_data, line_items}
 }
-
-export const session_return = async (session_id: string) => {
-    const order = await prisma.order.findUnique({
-        where: {id: session_id},
-        select:{items: true}
-    })
-    const items = order!.items
-    const line_items = items.map(item => ({
-        quantity: item.quantity,
-        price_data: {
-            
-        }
-    }))
-    return order
-} 

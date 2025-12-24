@@ -53,6 +53,7 @@
       "./build/services/prisma/stripe_handler/*"
     ],
     "#prisma_routes/*": ["./build/services/prisma/routes/*"],
+    "#prisma_refresh/*": ["./build/services/prisma/refresh/*"],
     "#stripe_core/*": [
       "./build/services/stripe/core/*"
     ],

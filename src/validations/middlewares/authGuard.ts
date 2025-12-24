@@ -7,7 +7,7 @@ export const auth_guard = async (req: FastifyRequest, res: FastifyReply) => {
     if (!cookie.valid) return res.status(401).send("Unauthorized")
     const token = await verify_token(cookie.value!)
     req.user = {id: token.payload.id as string, customerId: token.payload.customerId as string, roles: token.payload.roles as string[]}
-    if (!(req.user.roles?.includes('CUSTOMER'))) return res.status(401).send("Unauthorized")
+    if (!(req.user!.roles?.includes('CUSTOMER'))) return res.status(401).send("Unauthorized")
 }
 
 export const seller_guard = async (req: FastifyRequest, res: FastifyReply) => {

@@ -3,7 +3,7 @@ import cookie from '@fastify/cookie'
 import bcrypt from 'bcryptjs'
 
 import {create_customer, update_customer, delete_customer} from '#stripe_core/customer.js'
-import {user_create, user_update, user_password, user_delete, user_login, user_get, user_search, user_find} from '#prisma_routes/user.js'
+import {user_create, user_update, user_password, user_delete, user_login, user_get,user_search , user_find, refresh_cart} from '#prisma_routes/user.js'
 import {opt_user_create, opt_user_login, opt_user_password, opt_user_search, opt_user_find, opt_user_update, opt_user_delete, opt_user_get} from '../validations/schemas/user.js'
 import {generate_token} from '../services/jwt/index.js'
 import {User} from '#interfaces/user.js'
@@ -21,7 +21,7 @@ export const user = async (fastify: FastifyInstance) => {
             return res
                 .setCookie('token', token, {httpOnly: true, secure: true, sameSite: 'strict', path: '/', signed: true})
                 .status(200)
-                .send({user: {name: user!.name, email: user!.email}, cart: user!.cart, roles: roles})
+                .send({state:'sucess'})
         } catch (err) {
             return res.status(400).send({message: 'Email not Found'})
         }
@@ -37,9 +37,22 @@ export const user = async (fastify: FastifyInstance) => {
             return res
                 .setCookie('token', token, {httpOnly: true, secure: true, sameSite: 'strict', path: '/', signed: true})
                 .code(201)
-                .send({user: {name: user.name, email: user.email}, cart})
+                .send({state:'sucess'})
         } catch (err) {
             return res.status(500).send({message: `Internal Server Error ${err}`})
+        }
+    })
+    fastify.get('/', opt_user_get, async (req, res) => {
+        try {
+            const user = await user_get(req.user!.id)
+            const roles = user!.role.map(el => el.role.name)
+            const token = await generate_token({id: user!.id, customer_id: user?.stripeProfile!.id, roles: roles})
+            return res
+                .setCookie('token', token, {httpOnly: true, secure: true, sameSite: 'strict', path: '/', signed: true})
+                .status(200)
+                .send({user: {name: user!.name, email: user!.email}, cart: user!.cart, role: user!.role})
+        } catch (err) {
+            return res.status(401).send({message: 'User Not Found or Unauthorized'})
         }
     })
     fastify.patch('/', opt_user_update, async (req, res) => {
@@ -71,14 +84,6 @@ export const user = async (fastify: FastifyInstance) => {
             const user_data = await user_delete(req.user!.id)
             await delete_customer(user_data.customer_id)
             return res.status(200).send({message: 'sucess'})
-        } catch (err) {
-            return res.status(401).send({message: 'User Not Found or Unauthorized'})
-        }
-    })
-    fastify.get('/', opt_user_get, async (req, res) => {
-        try {
-            const user = await user_get(req.user!.id)
-            return res.status(200).send({user: {name: user!.name, email: user!.email}, cart: user!.cart, role: user!.role})
         } catch (err) {
             return res.status(401).send({message: 'User Not Found or Unauthorized'})
         }

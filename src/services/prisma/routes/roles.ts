@@ -11,6 +11,7 @@ export const create_roles = async () => {
         ],
     select: {name: true}
     })
+    prisma.$disconnect()
     return new_roles
 }
 
@@ -26,5 +27,6 @@ export const set_role = async (id: string, role: any) => {
         },
         include: {role: true}
     })
+    prisma.$disconnect()
     return user_role
 }

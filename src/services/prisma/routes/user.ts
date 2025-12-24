@@ -87,7 +87,11 @@ export const user_get = async (id: string) => {
     const user = await prisma.user.findUnique({
         where: {id: id},
             omit: {password: true},
-            include: {reviews: true, products: true, cart: {select: {items: true}}, role: {select: {role: {select: {name: true}}}}}
+            include: {
+                stripeProfile: true,
+                cart: {include: {items: true}},
+                role: {select: {role: {select: {name: true}}}}
+            }
     })
     prisma.$disconnect()
     return user

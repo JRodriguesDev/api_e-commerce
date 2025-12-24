@@ -2,7 +2,7 @@ import type {FastifyInstance} from 'fastify'
 import cookie from '@fastify/cookie'
 
 import {opt_session_create} from '#schemas/session.js'
-import {session_create, session_return} from '#prisma_routes/session.js'
+import {session_create} from '#prisma_routes/session.js'
 import {create_session} from '../services/stripe/session/product.js'
 import {order_update} from '#prisma_routes/order.js'
 
@@ -16,16 +16,6 @@ export const session = async (fastify: FastifyInstance) => {
             await order_update(session.metadata!.orderId, session.id)
             return res.status(200).send(session)
         } catch (err) {
-            return res.status(401).send({message: `User Not Found or Unauthorized ${err}`})
-        }
-    })
-    fastify.post('/return:id', opt_session_create, async (req, res) => {
-        try {
-            const {id} = req.params as {id: string}
-            const session = await session_return(id)
-            return res.status(200).send({session})
-            return
-        } catch (err){
             return res.status(401).send({message: `User Not Found or Unauthorized ${err}`})
         }
     })
