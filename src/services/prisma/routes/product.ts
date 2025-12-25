@@ -42,6 +42,7 @@ export const pages_product = async (limit: number, skip: number) => {
             rating: true,
             category: true,
             thumbnail: true,
+            stock: true,
             owner: {select: {name: true}}
         }
     })
@@ -62,6 +63,7 @@ export const category_products = async (category: string, limit: number, skip: n
             rating: true,
             category: true,
             thumbnail: true,
+            stock: true,
             owner: {select: {name: true}}
         },
     })
@@ -71,7 +73,7 @@ export const category_products = async (category: string, limit: number, skip: n
 
 export const find_product = async (id: string) => {
     const product = await prisma.product.findUnique({
-        where: {id},
+        where: {id: id},
         omit: {thumbnail: true},
         include: {
             reviews: {

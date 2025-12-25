@@ -2,7 +2,7 @@ model Cart {
     id String @id @default(nanoid())
     items CartItem[]
 
-    user User @relation(fields: [userId], references: [id])
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String @unique
 
     @@map("carts")
@@ -16,8 +16,8 @@ model CartItem {
     description String
     images String[]
     price Float
-
-    cart Cart @relation(fields: [cartId], references: [id])
+    stock Int
+    cart Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
     cartId String
 
     @@unique([cartId, productId])

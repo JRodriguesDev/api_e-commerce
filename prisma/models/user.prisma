@@ -6,6 +6,7 @@ model User {
     role UserRole[]
     cart Cart?
     products Product[]
+    productsPurchased ProductsPurchased[]
     reviews Reviews[]
     stripeProfile StripeProfile?
     orders Order[]
@@ -13,6 +14,19 @@ model User {
     @@map("users")
 }
 
+model ProductsPurchased {
+    productId String
+    images String[]
+    name String
+    description String
+    quantity Int
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String
+    
+    @@id([userId, productId])
+    @@map("products_purchased")
+}
 model Role {
     id String @id @default(nanoid())
     name String @unique
@@ -22,7 +36,7 @@ model Role {
 }
 
 model UserRole {
-    user User @relation(fields: [userId], references: [id])
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String
     role Role @relation(fields: [roleId], references: [id])
     roleId String

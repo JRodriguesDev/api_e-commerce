@@ -9,6 +9,7 @@ export const create_cart = async (id: string, product_id: string, quantity: numb
                 title: true,
                 description: true,
                 price: true,
+                stock: true,
             }
         })
         const cart_id = await prisma.cart.findUnique({
@@ -51,26 +52,55 @@ export const delete_cart_item = async (cart_id: string) => {
 }
 
 export const get_cart = async (id: string) => {
-    const {products, cart} = await prisma.$transaction(async (prisma) => {
+    const cart = await prisma.$transaction(async (prisma) => {
         const cart = await prisma.cart.findUnique({
             where: {userId: id},
-            include: {
-                items: {select: {cartId: true, productId: true, quantity: true}}
+            select: {
+                items: {include: {cart: true}}
             }
         })
         const products = await prisma.product.findMany({
             where: {id: {
-                in: cart?.items.map(el => el.productId)
+                in: cart!.items.map(el => el.productId)
             }},
             select: {
                 id: true,
-                thumbnail: true,
                 title: true,
+                description: true,
                 price: true,
+                images: true,
+                stock: true
             }
         })
-        return {products, cart}
+        const update_data = cart!.items.map(el => {
+            const product = products.find(p => p.id == el.productId)
+            return {
+                id: el.id,
+                title: product!.title,
+                description: product!.description,
+                price: product?.price,
+                images: product?.images,
+                stock: product?.stock
+            }
+        })
+        await Promise.all(update_data!.map(el => 
+            prisma.cartItem.update({
+                where: {id: el!.id},
+                data: {
+                    title: el?.title,
+                    description: el?.description,
+                    price: el?.price,
+                    images: el?.images,
+                    stock: el?.stock
+                }
+            })
+        ))
+        const new_cart = await prisma.cart.findUnique({
+            where: {userId: id},
+            include: {items: true}
+        })
+        return new_cart
     })
     prisma.$disconnect()
-    return {products, cart}
+    return cart
 }

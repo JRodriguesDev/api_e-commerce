@@ -7,7 +7,7 @@ model Order {
     stripeSessionId String?
     stripePaymentIntentId String? @unique
 
-    user User @relation(fields: [userId], references: [id])
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String
 
     createdAt DateTime @default(now())
@@ -24,7 +24,7 @@ model OrderItem {
     unitPriceAtPurchase Float
     description String
 
-    order Order @relation(fields: [orderId], references: [id])
+    order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
     orderId String
 
     @@map("order_items")

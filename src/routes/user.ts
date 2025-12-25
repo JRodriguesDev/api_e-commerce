@@ -3,7 +3,7 @@ import cookie from '@fastify/cookie'
 import bcrypt from 'bcryptjs'
 
 import {create_customer, update_customer, delete_customer} from '#stripe_core/customer.js'
-import {user_create, user_update, user_password, user_delete, user_login, user_get,user_search , user_find, refresh_cart} from '#prisma_routes/user.js'
+import {user_create, user_update, user_password, user_delete, user_login, user_get,user_search , user_find} from '#prisma_routes/user.js'
 import {opt_user_create, opt_user_login, opt_user_password, opt_user_search, opt_user_find, opt_user_update, opt_user_delete, opt_user_get} from '../validations/schemas/user.js'
 import {generate_token} from '../services/jwt/index.js'
 import {User} from '#interfaces/user.js'
@@ -50,7 +50,7 @@ export const user = async (fastify: FastifyInstance) => {
             return res
                 .setCookie('token', token, {httpOnly: true, secure: true, sameSite: 'strict', path: '/', signed: true})
                 .status(200)
-                .send({user: {name: user!.name, email: user!.email}, cart: user!.cart, role: user!.role})
+                .send({user: {id: user!.id, name: user!.name, email: user!.email}, roles: user!.role.map(r => r.role.name)})
         } catch (err) {
             return res.status(401).send({message: 'User Not Found or Unauthorized'})
         }
@@ -82,7 +82,7 @@ export const user = async (fastify: FastifyInstance) => {
     fastify.delete('/', opt_user_delete, async (req, res) => {
         try {
             const user_data = await user_delete(req.user!.id)
-            await delete_customer(user_data.customer_id)
+            await delete_customer(user_data.stripeProfile!.id)
             return res.status(200).send({message: 'sucess'})
         } catch (err) {
             return res.status(401).send({message: 'User Not Found or Unauthorized'})

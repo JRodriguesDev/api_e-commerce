@@ -41,14 +41,11 @@ export const cart = async (fastify: FastifyInstance) => {
     fastify.get('/', opt_cart_get, async (req, res) => {
         try {
             const {id} = req.user! as {id: string}
-            const {products, cart} = await get_cart(id)
-            const data = products.map(product => {
-                const item = cart?.items.find(i => i.productId === product.id)
-                return {...product, quantity: item?.quantity}
-            })
-            return res.status(200).send({data})
+            const cart = await get_cart(id)
+            
+            return res.status(200).send({cart})
         } catch (err) {
-            return res.status(401).send({message: 'User Not Found or Unauthorized'})
+            return res.status(401).send({message: `User Not Found or Unauthorized ${err}`})
         }
     })
 }

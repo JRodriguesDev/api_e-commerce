@@ -60,7 +60,7 @@ export const product = async (fastify: FastifyInstance) => {
     fastify.get('/product/:id', opt_find_product, async (req, res) => {
         try {
             const {id} = req.params as {id: string}
-            const products = find_product(id)
+            const products = await find_product(id)
             return res.status(200).send({products})
         } catch (err) {
             return res.status(400).send({message: 'Product Not Found'})

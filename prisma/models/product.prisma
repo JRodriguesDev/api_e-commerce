@@ -10,7 +10,7 @@ model Product {
     thumbnail String
     reviews Reviews[]
 
-    owner User @relation(fields: [ownerId], references: [id])
+    owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
     ownerId String
 
     @@map("products")
@@ -22,10 +22,10 @@ model Reviews {
     comment String
     date DateTime @default(now())
 
-    product Product @relation(fields: [productId], references: [id])
+    product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
     productId String
 
-    author User @relation(fields: [authorId], references: [id])
+    author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
     authorId String
 
     @@map("reviews")

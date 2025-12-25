@@ -1,3 +1,4 @@
+import { user } from '../../../routes/user.js'
 import prisma  from '../index.js'
 
 export const user_create = async (name: string, email: string, password: string, customer_id: string) => {
@@ -7,7 +8,7 @@ export const user_create = async (name: string, email: string, password: string,
                 name,
                 email,
                 password: password,
-                role: {create: {role: {connect: {name: 'ADMIN'}}}}
+                role: {create: {role: {connect: {name: 'CUSTOMER'}}}}
             },
             omit: {password: true},
             include: {role: {select: {role: {select: {name: true}}}}}
@@ -58,17 +59,14 @@ export const user_password = async (id: string, password: string) => {
 
 export const user_delete = async (id: string) => {
     const data = await prisma.$transaction(async (prisma) => {
-        await prisma.reviews.deleteMany({
-            where: {authorId: id}
-        })
         const user = await prisma.user.delete({
-            where: {id: id},
-            select: {name: true, stripeProfile: {select: {id: true}}}
+        where: {id: id},
+            select: {stripeProfile: {select: {id: true}}},
         })
         return user
     })
     prisma.$disconnect()
-    return {name: data.name, customer_id: data.stripeProfile!.id}
+    return data
 }
 
 export const user_login = async (email: string) => {
@@ -89,7 +87,6 @@ export const user_get = async (id: string) => {
             omit: {password: true},
             include: {
                 stripeProfile: true,
-                cart: {include: {items: true}},
                 role: {select: {role: {select: {name: true}}}}
             }
     })

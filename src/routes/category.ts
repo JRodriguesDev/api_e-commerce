@@ -39,7 +39,7 @@ export const category = async (fastify: FastifyInstance) => {
     fastify.get('/', async (req, res) => {
         try {
             const categories = await all_categories()
-            return res.status(200).send({category})
+            return res.status(200).send({categories})
         } catch (err) {
             return res.status(500).send({message: 'Internal Server Error'})
         }
