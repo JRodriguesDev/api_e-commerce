@@ -3,4 +3,5 @@ export interface orderCache {
     order_id?: string
     session_id?: string
     status?: 'PAID' | 'FAILED' | 'EXPIRE'
+    totalAmount?: number
 }

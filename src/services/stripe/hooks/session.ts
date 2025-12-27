@@ -22,7 +22,8 @@ export const payment_hook = async (fastify: FastifyInstance) => {
                     let data_complete = {
                         payment_intent_id: event.data.object.payment_intent as string,
                         session_id: event.data.object.id,
-                        order_id: event.data.object.metadata!.orderId!
+                        order_id: event.data.object.metadata!.orderId!,
+                        totalAmount: event.data.object.amount_total!
                     } satisfies orderCache 
                     await set_session_cache(event.data.object.customer as string, data_complete)
                     await finalize_paid_order(event.data.object.customer as string)

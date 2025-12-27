@@ -15,6 +15,7 @@ model User {
 }
 
 model ProductsPurchased {
+    //id String @id @default(nanoid())
     productId String
     images String[]
     name String
@@ -24,6 +25,9 @@ model ProductsPurchased {
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String
     
+    //createdAt DateTime @default(now())
+    //updatedAt DateTime @updatedAt
+
     @@id([userId, productId])
     @@map("products_purchased")
 }

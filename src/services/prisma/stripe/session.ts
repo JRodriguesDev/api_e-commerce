@@ -37,6 +37,7 @@ export const state_paid = async (data: orderCache) => {
                 data: {
                     status: 'PAID',
                     stripePaymentIntentId: data.payment_intent_id,
+                    totalAmount: data.totalAmount
                 },
                 select: {userId: true}
             })
@@ -74,7 +75,7 @@ export const state_paid = async (data: orderCache) => {
                 where: {id: el?.id},
                 data: {stock: el?.stock}
             })))
-            await prisma.cartItem.deleteMany(/*{where: {id: {in: cart?.items.map(el => el.id)}}}*/)
+            await prisma.cartItem.deleteMany()
         })
     } catch (err) {
         console.log(`Prisma ERR: ${err}`)

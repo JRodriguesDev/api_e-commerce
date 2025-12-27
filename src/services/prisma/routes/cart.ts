@@ -12,6 +12,7 @@ export const create_cart = async (id: string, product_id: string, quantity: numb
                 stock: true,
             }
         })
+        if (quantity <= product!.stock) {
         const cart_id = await prisma.cart.findUnique({
             where: {userId: id},
                 select: {id: true}
@@ -26,25 +27,35 @@ export const create_cart = async (id: string, product_id: string, quantity: numb
             select: { quantity: true, productId: true}
         })
         return new_cart_item
+        } else return {message: 'no Stock'}
     })
     prisma.$disconnect()
     return cart_item
 }
 
 export const update_cart = async (cart_id: string, quantity: number)  => {
-    const cart_item = await prisma.cartItem.update({
+    const cart_product = await prisma.cartItem.findUnique({
         where: {id: cart_id},
-        data: {
-            quantity
-        },
-        select: {quantity: true, productId: true}
+        select: {stock: true}
     })
+    if (quantity <= cart_product!.stock) {
+        await prisma.cartItem.update({
+            where: {id: cart_id},
+            data: {
+                quantity
+            },
+            select: {quantity: true, productId: true}
+        })
+    } else {
+        prisma.$disconnect()
+        return {message: 'No Stock'} 
+    }
     prisma.$disconnect()
-    return cart_item
+    return {message: 'Sucess'} 
 }
 
 export const delete_cart_item = async (cart_id: string) => {
-    const cart_item = await prisma.cartItem.delete({
+    await prisma.cartItem.delete({
         where: {id: cart_id},
         select: {productId: true}
     })

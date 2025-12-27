@@ -26,16 +26,16 @@ export const cart = async (fastify: FastifyInstance) => {
             const cart_item = await update_cart(cartId, quantity)
             return res.status(200).send({cart_item})
         } catch (err) {
-            return res.status(401).send({message: 'User Not Found or Unauthorized'})
+            return res.status(401).send({message: `User Not Found or Unauthorized ${err}`})
         }
     })
     fastify.delete('/:cartId', opt_cart_delete, async (req, res) => {
         try {
             const {cartId} = req.params as {cartId: string}
             const cart_item = await delete_cart_item(cartId)
-            return res.status(200).send({cart_item})
+            return res.status(200).send({message: 'sucess'})
         } catch (err) {
-            return res.status(401).send({message: 'User Not Found or Unauthorized'})
+            return res.status(401).send({message: `User Not Found or Unauthorized ${err}`})
         }
     })
     fastify.get('/', opt_cart_get, async (req, res) => {
