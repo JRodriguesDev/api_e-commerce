@@ -37,7 +37,7 @@ export const state_paid = async (data: orderCache) => {
                 data: {
                     status: 'PAID',
                     stripePaymentIntentId: data.payment_intent_id,
-                    totalAmount: data.totalAmount
+                    totalAmount: Number(data.totalAmount)
                 },
                 select: {userId: true}
             })
@@ -68,7 +68,7 @@ export const state_paid = async (data: orderCache) => {
                 const product = products.find(p => p.id == el.productId)
                 if (product) return {
                     id: product.id,
-                    stock: product.stock - el.stock
+                    stock: product.stock - el.quantity
                 }
             })
             await Promise.all(new_stock!.map(el => prisma.product.update({

@@ -8,6 +8,7 @@ export const create_session = async (id: string, customer: string, items: Stripe
         customer: customer,
         line_items: items,
         mode: 'payment',
+        saved_payment_method_options: {payment_method_save: 'enabled'},
         cancel_url: 'http://return',
         success_url: 'http://sucess'
     })

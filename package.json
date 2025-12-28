@@ -61,6 +61,7 @@
     "#stripe_hooks/*": [
       "./build/services/stripe/hooks/*"
     ],
+    "#stripe_payments/*": ["./build/services/stripe/payments/*"],
     "#stripe_cahce/*": ["./build/services/redis/stripe/*"],
     "#logic_orders/*": ["./build/logic/orders/*"]
   }

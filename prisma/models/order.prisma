@@ -3,7 +3,7 @@ model Order {
 
     status OrderStatus @default(PENDING)
     items OrderItem[]
-    totalAmount Float?
+    totalAmount Int?
     stripeSessionId String?
     stripePaymentIntentId String? @unique
 

@@ -10,6 +10,7 @@ export const product_create_schema = async (req: FastifyRequest, res: FastifyRep
         rating: z.number('required string'),
         stock: z.number('required string'),
         thumbnail: z.string('required string'),
+        images: z.array(z.string())
     })
     try {
         const data = zod_shema.parse(req.body)

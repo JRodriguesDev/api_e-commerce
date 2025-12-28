@@ -3,7 +3,7 @@ import {auth_guard, seller_guard} from '#middllewares/authGuard.js'
 import {product_create_schema} from '../zod/product.js'
 
 export const opt_product_create: RouteShorthandOptions = {
-    preHandler: [auth_guard, seller_guard, product_create_schema],
+    preHandler: [auth_guard, seller_guard],
     schema: {
         body: {
             type: 'object',
