@@ -10,6 +10,7 @@ model User {
     reviews Reviews[]
     stripeProfile StripeProfile?
     orders Order[]
+    subscriptions Subscription[]
 
     @@map("users")
 }
