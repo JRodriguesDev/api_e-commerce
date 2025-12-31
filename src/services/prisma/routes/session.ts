@@ -1,7 +1,7 @@
 import prisma  from '../index.js'
 import {StripeLineItem} from '#interfaces/stripe.js'
 
-export const session_create = async (id: string) => {
+export const session_product_create = async (id: string) => {
     const user = await prisma.user.findUnique({
         where: {id: id},
         omit: {password: true},
@@ -47,4 +47,49 @@ export const session_create = async (id: string) => {
     })
     prisma.$disconnect()
     return {user, order_data, line_items}
+}
+
+export const session_subscription_create = async (id: string, planId: string) => {
+    const data = await prisma.$transaction(async (prisma) => {
+        const user = await prisma.user.findUnique({
+            where: {id: id},
+            select: {stripeProfile: {select: {id: true}}}
+        })
+        const plan = await prisma.plan.findUnique({
+            where: {id: planId},
+            omit: {createdAt: true}
+        })
+        const unitAmountCents = Math.round(plan!.price * 100)
+        const line_items = [{
+            quantity: 1,
+            price_data: {
+                currency: 'brl',
+                unit_amount: unitAmountCents,
+                product_data: {
+                    name: plan!.name,
+                    description: `Assinatura ${plan?.name}`,
+                },
+                recurring: {interval: 'month'}
+            }
+        } satisfies StripeLineItem] 
+        const new_order = await prisma.order.create({
+            data: {
+                userId: id
+            },
+            select: {id: true}
+        })
+        await prisma.orderItem.create({
+            data: {
+                orderId: new_order.id,
+                productId: planId,
+                productName: plan!.name,
+                unitPriceAtPurchase: plan!.price,
+                quantity: 1,
+                description: `Assinatura ${plan?.name}`
+            }
+        })
+        return  {customerId: user!.stripeProfile!.id, planId: plan!.id, new_order, line_items}
+    })
+    prisma.$disconnect()
+    return data
 }

@@ -10,7 +10,7 @@ export interface StripeLineItem {
         product_data: {
             name: string,
             description: string,
-            images: string[]
+            images?: string[]
         },
         recurring?: {interval: 'day' | 'week' | 'month' | 'year'}
     }

@@ -9,6 +9,8 @@ model Subscription {
     userId String
 
     createdAt DateTime @default(now())
+
+    @@map("subscriptions")
 }
 
 enum Status {
