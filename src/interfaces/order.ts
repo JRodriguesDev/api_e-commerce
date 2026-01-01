@@ -1,7 +1,9 @@
 export interface orderCache {
-    payment_intent_id?: string
-    order_id?: string
-    session_id?: string
+    orderId?: string
+    paymentIntentId?: string
+    invoiceId?: string
+    paymentType?: string[]
+    paymentError?: string
     status?: 'PAID' | 'FAILED' | 'EXPIRE'
     mode?: 'payment' | 'subscription' | 'setup'
     totalAmount?: number

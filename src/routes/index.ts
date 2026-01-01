@@ -10,6 +10,7 @@ import {productPurchased} from './productsPurchased.js'
 import {orders} from './orders.js'
 import {payments} from './payments.js'
 import {plan} from './plan.js'
+import {subscription} from './subscription.js'
 
 const routes = async (fastify: FastifyInstance) => {
     fastify.register(user, {prefix: '/user'})
@@ -23,6 +24,7 @@ const routes = async (fastify: FastifyInstance) => {
     fastify.register(orders, {prefix: '/orders'})
     fastify.register(payments, {prefix: '/payments'})
     fastify.register(plan, {prefix: '/plan'})
+    fastify.register(subscription, {prefix: '/subscription'})
 }
 
 export default routes

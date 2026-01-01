@@ -24,14 +24,15 @@
             "#prisma": ["./src/services/prisma/index.ts"],
             "#prisma_stripe/*": ["./src/services/prisma/stripe/*"],
             "#prisma_routes/*": ["./src/services/prisma/routes/*"],
-            "#prisma_refresh/*": ["./src/services/prisma/refresh/*"],
 
             "#stripe_core/*": ["./src/services/stripe/core/*"],
             "#stripe_checkout/*": ["./src/services/stripe/session/*"],
             "#stripe_hooks/*" : ["./src/services/stripe/hooks/*"],
-            "#stripe_cahce/*": ["./src/services/redis/stripe/*"],
             "#stripe_payments/*": ["./src/services/stripe/payments/*"],
-            "#logic_orders/*": ["./src/logic/orders/*"],
+            "#logic_stripe/*": ["./src/logic/stripe/*"],
+            
+            "#stripe_cache/*": ["./src/services/redis/stripe/*"],
+            
         }
 
     },

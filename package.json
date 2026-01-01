@@ -50,10 +50,9 @@
       "./build/services/prisma/index.js"
     ],
     "#prisma_stripe/*": [
-      "./build/services/prisma/stripe_handler/*"
+      "./build/services/prisma/stripe/*"
     ],
     "#prisma_routes/*": ["./build/services/prisma/routes/*"],
-    "#prisma_refresh/*": ["./build/services/prisma/refresh/*"],
     "#stripe_core/*": [
       "./build/services/stripe/core/*"
     ],
@@ -62,7 +61,7 @@
       "./build/services/stripe/hooks/*"
     ],
     "#stripe_payments/*": ["./build/services/stripe/payments/*"],
-    "#stripe_cahce/*": ["./build/services/redis/stripe/*"],
-    "#logic_orders/*": ["./build/logic/orders/*"]
+    "#stripe_cache/*": ["./build/services/redis/stripe/*"],
+    "#logic_stripe/*": ["./build/logic/stripe/*"]
   }
 }

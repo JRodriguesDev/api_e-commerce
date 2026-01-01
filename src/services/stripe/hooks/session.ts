@@ -2,9 +2,7 @@ import type {Stripe} from 'stripe'
 import type { FastifyInstance, FastifyRequest} from 'fastify'
 
 import stripe  from '../index.js'
-import {set_payment_cache, set_session_cache} from '../../redis/stripe/session.js'
-import {finalize_paid_order, finalize_expire_order} from '#logic_orders/finalize.js'
-import {orderCache} from '#interfaces/order.js'
+import {session_completed, session_expire, payment_failed, payment_succeeded, invoce_succeeded} from '#logic_stripe/hooks.js'
     
 export const payment_hook = async (fastify: FastifyInstance) => {
     fastify.addContentTypeParser('application/json', {parseAs: 'buffer'}, async (req: FastifyRequest, payload: Buffer) => {return payload})
@@ -19,36 +17,21 @@ export const payment_hook = async (fastify: FastifyInstance) => {
             console.log(`Evento ${event.type}`)
             switch (event.type) {
                 case 'checkout.session.completed':
-                    let data_complete = {
-                        payment_intent_id: event.data.object.payment_intent as string || event.data.object.invoice as string,
-                        session_id: event.data.object.id,
-                        order_id: event.data.object.metadata!.orderId!,
-                        totalAmount: event.data.object.amount_total!,
-                        mode: event.data.object.mode,
-                        planId: event.data.object.metadata!.planId || '',
-                        subscriptionId: event.data.object.subscription as string || ''
-                    } satisfies orderCache 
-                    console.log(data_complete)
-                    await set_session_cache(event.data.object.customer as string, data_complete)
-                    await finalize_paid_order(event.data.object.customer as string)
+                    session_completed(event)
                     break;
+                    case 'checkout.session.expired':
+                    session_expire(event)
+                        break;
                 case 'payment_intent.succeeded':
-                    await set_payment_cache(event.data.object.customer as string, {payment_intent_id: event.data.object.id})
-                    await finalize_paid_order(event.data.object.customer as string)
+                    payment_succeeded(event)
                     break;
                 case 'payment_intent.payment_failed':
-                    await set_payment_cache(event.data.object.customer as string, {payment_intent_id: event.data.object.id})
+                    payment_failed(event)
                     break;
-                case 'checkout.session.expired':
-                    let data_expire = {
-                        session_id: event.data.object.id,
-                        order_id: event.data.object.metadata!.orderId!,
-                        payment_intent_id: event.data.object.payment_intent as string || event.data.object.invoice as string
-                    } satisfies orderCache 
-                    await set_session_cache(event.data.object.customer as string, data_expire)
-                    await finalize_expire_order(event.data.object.customer as string)
+                case 'invoice.payment_succeeded':
+                    invoce_succeeded(event)
                     break;
-                default: 
+                default:
                     console.log(`Event Ignored: ${event.type}`)
             }
             return res.status(200).send({received: true})

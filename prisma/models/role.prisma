@@ -1,0 +1,17 @@
+model Role {
+    id String @id @default(nanoid())
+    name String @unique
+    users UserRole[]
+
+    @@map("roles")
+}
+
+model UserRole {
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String
+    role Role @relation(fields: [roleId], references: [id])
+    roleId String
+
+    @@id([userId, roleId])
+    @@map("user_roles")
+}

@@ -3,9 +3,9 @@ import cookie from '@fastify/cookie'
 
 import {opt_session_create} from '#schemas/session.js'
 import {session_product_create, session_subscription_create} from '#prisma_routes/session.js'
-import {create_product_session, create_subscription_session} from '../services/stripe/session/checkout.js'
+import {create_product_session, create_subscription_session} from '#stripe_checkout/checkout.js'
+import {set_order_cache} from '#stripe_cache/events.js'
 import {order_update} from '#prisma_routes/order.js'
-
 export const session = async (fastify: FastifyInstance) => {
     fastify.register(cookie, {secret: process.env.COOKIE_SECRET, hook: 'onRequest'})
 
@@ -14,6 +14,7 @@ export const session = async (fastify: FastifyInstance) => {
             const data = await session_product_create(req.user!.id)
             const session = await create_product_session(data.order_data.id, data.user!.stripeProfile!.id, data.line_items)
             await order_update(session.metadata!.orderId, session.id)
+            await set_order_cache(data.user!.stripeProfile!.id, {orderId: session.metadata!.orderId, mode: 'payment'})
             return res.status(200).send(session)
         } catch (err) {
             return res.status(401).send({message: `User Not Found or Unauthorized ${err}`})
@@ -26,6 +27,7 @@ export const session = async (fastify: FastifyInstance) => {
             const data = await session_subscription_create(id, planId)
             const session = await create_subscription_session(data.new_order.id, data.planId, data.customerId, data.line_items)
             await order_update(session.metadata!.orderId, session.id)
+            await set_order_cache(data.customerId, {orderId: session.metadata!.orderId, planId: data.planId, mode: 'subscription'})
             return res.status(200).send({session})
         } catch (err) {
             return res.status(401).send({message: `User Not Found or Unauthorized ${err}`})
