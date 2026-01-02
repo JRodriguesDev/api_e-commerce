@@ -62,6 +62,7 @@
     ],
     "#stripe_payments/*": ["./build/services/stripe/payments/*"],
     "#stripe_cache/*": ["./build/services/redis/stripe/*"],
+    "#db_cache/*": ["./build/services/redis/db/*"],
     "#stripe_billing/*": ["./build/services/stripe/billing/*"],
     "#logic_stripe/*": ["./build/logic/stripe/*"]
   }

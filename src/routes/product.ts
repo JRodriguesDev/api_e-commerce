@@ -2,8 +2,9 @@ import type {FastifyInstance} from 'fastify'
 import cookie from '@fastify/cookie'
 
 import {opt_pages_product, opt_product_create, opt_product_update, opt_user_delete, opt_find_product, opt_category_products} from '../validations/schemas/product.js'
-import {create_product, update_product, delete_product, pages_product, category_products, find_product} from '#prisma_routes/product.js'
+import {create_product, update_product, delete_product, category_products, find_product} from '#prisma_routes/product.js'
 import { Product } from '#interfaces/product.js'
+import {product_cache, product_cache_version} from '#db_cache/product.js'
 
 export const product = async (fastify: FastifyInstance) => {
     fastify.register(cookie, {secret: process.env.COOKIE_SECRET, hook: 'onRequest'})
@@ -12,6 +13,7 @@ export const product = async (fastify: FastifyInstance) => {
         try {
             const {...data} = req.body as Product
             const product = await create_product(req.user!.id, data)
+            await product_cache_version()
             return res.status(201).send({product})
         } catch (err) {
             return res.status(500).send({message: `Internal Server ${err}`})
@@ -22,6 +24,7 @@ export const product = async (fastify: FastifyInstance) => {
             const {id} = req.params as {id: string}
             const {...data} = req.body as Product
             const product = await update_product(id, req.user!.id, data)
+            await product_cache_version()
             return res.status(200).send({product})
         } catch (err) {
             return res.status(401).send({message: 'Product Not Found or Unauthorized'})
@@ -31,6 +34,7 @@ export const product = async (fastify: FastifyInstance) => {
         try {
             const {id} = req.params as {id: string}
             await delete_product(id, req.user!.id)
+            await product_cache_version()
             return res.status(200).send({message: 'sucess'})
         } catch (err) {
             return res.status(401).send({message: 'Product Not Found or Unauthorized'})
@@ -40,7 +44,7 @@ export const product = async (fastify: FastifyInstance) => {
         try {
             const {limit, page} = req.query as {limit: number, page: number}
             const skip = (page - 1) * limit
-            const products = await pages_product(limit, skip)
+            const products = await product_cache(limit, skip)
             return res.status(200).send({products: products})
         } catch (err) {
             return res.status(500).send({message: 'Internal Server Error'})
