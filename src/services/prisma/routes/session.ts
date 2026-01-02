@@ -53,7 +53,7 @@ export const session_subscription_create = async (id: string, planId: string) =>
     const data = await prisma.$transaction(async (prisma) => {
         const user = await prisma.user.findUnique({
             where: {id: id},
-            select: {stripeProfile: {select: {id: true}}}
+            select: {stripeProfile: {select: {id: true, userId: true}}}
         })
         const plan = await prisma.plan.findUnique({
             where: {id: planId},
@@ -72,23 +72,8 @@ export const session_subscription_create = async (id: string, planId: string) =>
                 recurring: {interval: 'month'}
             }
         } satisfies StripeLineItem] 
-        const new_order = await prisma.order.create({
-            data: {
-                userId: id
-            },
-            select: {id: true}
-        })
-        await prisma.orderItem.create({
-            data: {
-                orderId: new_order.id,
-                productId: planId,
-                productName: plan!.name,
-                unitPriceAtPurchase: plan!.price,
-                quantity: 1,
-                description: `Assinatura ${plan?.name}`
-            }
-        })
-        return  {customerId: user!.stripeProfile!.id, planId: plan!.id, new_order, line_items}
+        
+        return  {id: user?.stripeProfile?.userId, customerId: user!.stripeProfile!.id, planId: plan!.id, line_items}
     })
     prisma.$disconnect()
     return data

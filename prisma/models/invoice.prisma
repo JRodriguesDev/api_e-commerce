@@ -1,14 +1,15 @@
-model Subscription {
+model Invoice {
     id String @id
 
+    subscriptionId String?
+    planId String?
+    totalAmount Int?
     status String
-    plan String
-    description String?
 
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String
 
     createdAt DateTime @default(now())
 
-    @@map("subscriptions")
+    @@map("invoices")
 }

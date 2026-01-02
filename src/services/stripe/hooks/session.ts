@@ -2,7 +2,7 @@ import type {Stripe} from 'stripe'
 import type { FastifyInstance, FastifyRequest} from 'fastify'
 
 import stripe  from '../index.js'
-import {session_completed, session_expire, payment_failed, payment_succeeded, invoce_succeeded} from '#logic_stripe/hooks.js'
+import {session_completed, session_expire, payment_failed, payment_succeeded, invoce_succeeded, customer_subscription_update} from '#logic_stripe/hooks.js'
     
 export const payment_hook = async (fastify: FastifyInstance) => {
     fastify.addContentTypeParser('application/json', {parseAs: 'buffer'}, async (req: FastifyRequest, payload: Buffer) => {return payload})
@@ -30,6 +30,9 @@ export const payment_hook = async (fastify: FastifyInstance) => {
                     break;
                 case 'invoice.payment_succeeded':
                     invoce_succeeded(event)
+                    break;
+                case 'customer.subscription.updated':
+                    customer_subscription_update(event)
                     break;
                 default:
                     console.log(`Event Ignored: ${event.type}`)

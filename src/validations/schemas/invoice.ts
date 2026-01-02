@@ -1,19 +1,19 @@
 import type {RouteShorthandOptions} from 'fastify'
 import {auth_guard} from '#middllewares/authGuard.js'
 
-export const opt_session_create: RouteShorthandOptions = {
+export const opt_invoice_list: RouteShorthandOptions = {
     preHandler: [auth_guard]
-}
+} 
 
-export const opt_session_subscription: RouteShorthandOptions = {
+export const opt_invoice_pay: RouteShorthandOptions = {
     preHandler: [auth_guard],
     schema: {
         params: {
             type: 'object',
             properties: {
-                planId: {type: 'string'}
+                invoiceId: {type: 'string'}
             },
-            required: ['planId']
+            required: ['invoiceId']
         }
     }
 }

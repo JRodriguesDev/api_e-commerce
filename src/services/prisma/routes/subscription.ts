@@ -7,3 +7,9 @@ export const subscription_list = async (id: string) => {
     })
     return subscriptions
 }
+
+export const subscription_delete = async (id: string) => {
+    const subscription = await prisma.subscription.delete({
+        where: {id: id}
+    })
+}

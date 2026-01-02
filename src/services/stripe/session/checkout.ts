@@ -15,9 +15,8 @@ export const create_product_session = async (id: string, customer: string, items
     return session
 }
 
-export const create_subscription_session = async (id: string, planId: string, customer: string, plan: StripeLineItem[]) => {
+export const create_subscription_session = async (customer: string, plan: StripeLineItem[]) => {
     const session = await stripe.checkout.sessions.create({
-        metadata: {orderId: id, planId: planId},
         customer: customer,
         line_items: plan,
         mode: 'subscription',
@@ -27,4 +26,5 @@ export const create_subscription_session = async (id: string, planId: string, cu
     })
     return session
 }
+
 

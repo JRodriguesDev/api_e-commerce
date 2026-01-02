@@ -9,6 +9,7 @@ model User {
     productsPurchased ProductsPurchased[]
     reviews Reviews[]
     stripeProfile StripeProfile?
+    invoices Invoice[]
     orders Order[]
     subscriptions Subscription[]
 

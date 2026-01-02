@@ -29,6 +29,7 @@
             "#stripe_checkout/*": ["./src/services/stripe/session/*"],
             "#stripe_hooks/*" : ["./src/services/stripe/hooks/*"],
             "#stripe_payments/*": ["./src/services/stripe/payments/*"],
+            "#stripe_billing/*": ["./src/services/stripe/billing/*"],
             "#logic_stripe/*": ["./src/logic/stripe/*"],
             
             "#stripe_cache/*": ["./src/services/redis/stripe/*"],

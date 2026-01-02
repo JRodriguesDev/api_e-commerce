@@ -9,9 +9,6 @@ model Order {
     stripePaymentIntentId String? @unique
     paymentType String[]
     paymentError String?
-    invoiceId String?
-    subscriptionId String?
-    planId String?
 
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String

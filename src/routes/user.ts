@@ -85,7 +85,7 @@ export const user = async (fastify: FastifyInstance) => {
             await delete_customer(user_data.stripeProfile!.id)
             return res.status(200).send({message: 'sucess'})
         } catch (err) {
-            return res.status(401).send({message: 'User Not Found or Unauthorized'})
+            return res.status(401).send({message: `User Not Found or Unauthorized ${err}`})
         }
     })
     fastify.get('/users', opt_user_search, async (req, res) => {

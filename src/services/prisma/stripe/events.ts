@@ -92,27 +92,39 @@ export const payment_state_paid = async (data: orderCache) => {
 
 export const invoice_state_paid = async (data: orderCache) => {
     await prisma.$transaction(async (prisma) => {
-        const order = await prisma.order.update({
-            where: {id: data.orderId},
+        const invoice = await prisma.invoice.create({
             data: {
-                totalAmount: data.totalAmount,
-                status: 'PAID',
-                mode: data.mode,
-                invoiceId: data.invoiceId,
-                subscriptionId: data.subscriptionId,
-                planId: data.planId
+                id: data.invoiceId as string,
+                totalAmount: data.totalAmount as number,
+                status: 'paid',
+                subscriptionId: data.subscriptionId as string,
+                planId: data.planId as string,
+                userId: data.userId as string
             },
             select: {userId: true}
         })
-        await prisma.user.update({
-            where: {id: order.userId},
-            data: {
-                subscriptions: {create: {
-                    status: 'ACTIVE',
-                    plan: data.planId as string,
-                    stripeSubscriptionId: data.subscriptionId as string
-                }}
+        await prisma.subscription.upsert({
+            where: {
+                id: data.subscriptionId as string,
+            },
+            create: {
+                id: data.subscriptionId as string,
+                plan: data.planId as string,
+                status: 'active',
+                userId: invoice.userId,
+                description: data.description as string
+            },
+            update: {
+                status: 'active',
+                plan: data.planId as string
             }
         })
+    })
+}
+
+export const subscription_state_update = async (data: orderCache) => {
+    await prisma.subscription.update({
+        where: {id: data.subscriptionId},
+        data: {status: data.status}
     })
 }
