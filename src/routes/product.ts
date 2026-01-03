@@ -2,9 +2,9 @@ import type {FastifyInstance} from 'fastify'
 import cookie from '@fastify/cookie'
 
 import {opt_pages_product, opt_product_create, opt_product_update, opt_user_delete, opt_find_product, opt_category_products} from '../validations/schemas/product.js'
-import {create_product, update_product, delete_product, category_products, find_product} from '#prisma_routes/product.js'
+import {create_product, update_product, delete_product, category_products} from '#prisma_routes/product.js'
 import { Product } from '#interfaces/product.js'
-import {product_cache, product_cache_version} from '#db_cache/product.js'
+import {product_cache, product_cache_version, product_perfil_cache, product_perfil_reset} from '#db_cache/product.js'
 
 export const product = async (fastify: FastifyInstance) => {
     fastify.register(cookie, {secret: process.env.COOKIE_SECRET, hook: 'onRequest'})
@@ -24,6 +24,7 @@ export const product = async (fastify: FastifyInstance) => {
             const {id} = req.params as {id: string}
             const {...data} = req.body as Product
             const product = await update_product(id, req.user!.id, data)
+            await product_perfil_reset(id)
             await product_cache_version()
             return res.status(200).send({product})
         } catch (err) {
@@ -34,6 +35,7 @@ export const product = async (fastify: FastifyInstance) => {
         try {
             const {id} = req.params as {id: string}
             await delete_product(id, req.user!.id)
+            await product_perfil_reset(id)
             await product_cache_version()
             return res.status(200).send({message: 'sucess'})
         } catch (err) {
@@ -64,7 +66,7 @@ export const product = async (fastify: FastifyInstance) => {
     fastify.get('/product/:id', opt_find_product, async (req, res) => {
         try {
             const {id} = req.params as {id: string}
-            const products = await find_product(id)
+            const products = await product_perfil_cache(id)
             return res.status(200).send({products})
         } catch (err) {
             return res.status(400).send({message: 'Product Not Found'})

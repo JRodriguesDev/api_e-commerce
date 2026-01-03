@@ -1,5 +1,6 @@
 import prisma from '../index.js'
 
+
 export const review_create = async (id: string, productId: string, rating: number, comment: string) => {
     const review = await prisma.reviews.create({
         data: {
@@ -29,6 +30,7 @@ export const review_update = async (id: string, author_id: string, body: {}) => 
             date: true,
             rating: true,
             id: true,
+            productId: true,
             author: {select: {name: true, id: true}}
         }
     })
@@ -38,7 +40,9 @@ export const review_update = async (id: string, author_id: string, body: {}) => 
 
 export const review_delete = async (id: string, author_id: string) => {
     const review = await prisma.reviews.delete({
-        where: {id: id, authorId: author_id}
+        where: {id: id, authorId: author_id},
+        select: {productId: true}
     })
+    return review
     prisma.$disconnect()
 }

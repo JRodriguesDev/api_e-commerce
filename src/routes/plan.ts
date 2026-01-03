@@ -2,7 +2,8 @@ import type {FastifyInstance} from 'fastify'
 import cookie from '@fastify/cookie'
 
 import {opt_create_plan, opt_list_plan, opt_delete_plan, opt_update_plan} from '#schemas/plan.js'
-import {create_plan, list_plan, delete_plan, update_plan} from '#prisma_routes/plan.js'
+import {create_plan, delete_plan, update_plan} from '#prisma_routes/plan.js'
+import {plan_cache, plan_cache_reset} from '#db_cache/plan.js'
 
 export const plan = async (fastify: FastifyInstance) => {
     fastify.register(cookie, {secret: process.env.COOKIE_SECRET, hook: 'onRequest'})
@@ -11,6 +12,7 @@ export const plan = async (fastify: FastifyInstance) => {
         try {
             const {name, discountPercent, price} = req.body as {name: string, discountPercent: number, price: number}
             const plan = await create_plan(name, discountPercent, price)
+            await plan_cache_reset()
             return res.status(201).send({plan})
         } catch (err) {
             return res.status(401).send({message: `Unauthorized ${err}`})
@@ -21,6 +23,7 @@ export const plan = async (fastify: FastifyInstance) => {
             const {id} = req.params as {id: string}
             const {...data} = req.body as {}
             const plan = await update_plan(id, data)
+            await plan_cache_reset()
             return res.status(200).send({plan})
         } catch (err) {
             return res.status(401).send({message: 'Unauthorized'})
@@ -30,6 +33,7 @@ export const plan = async (fastify: FastifyInstance) => {
         try {
             const {id} = req.params as {id: string}
             const plan = await delete_plan(id)
+            await plan_cache_reset()
             return res.status(200).send({plan})
         } catch (err) {
             return res.status(401).send({message: 'Unauthorized'})
@@ -37,7 +41,7 @@ export const plan = async (fastify: FastifyInstance) => {
     })
     fastify.get('/', opt_list_plan, async (req, res) => {
         try {
-            const plans = await list_plan()
+            const plans = await plan_cache()
             return res.status(200).send({plans})
         } catch (err) {
             return res.status(401).send({message: 'Unauthorized'})

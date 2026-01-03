@@ -5,5 +5,5 @@ export const admin_guard = async (req: FastifyRequest, res: FastifyReply) => {
 }
 
 export const moderator_guard = async (req: FastifyRequest, res: FastifyReply) => {
-    if (!(req.user!.roles?.includes('ADMIN')) || !(req.user!.roles.includes('MODERATOR'))) return res.status(401).send({message: "Unauthorized"})
+    if (!(req.user!.roles?.includes('ADMIN')) || !(req.user!.roles?.includes('CUSTOMER'))) return res.status(401).send({message: "Unauthorized"})
 }

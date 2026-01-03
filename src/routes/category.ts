@@ -3,6 +3,7 @@ import cookie from '@fastify/cookie'
 
 import {opt_category_create, opt_category_update, opt_category_delete} from '../validations/schemas/category.js'
 import {create_category, update_category, delete_category, all_categories} from '#prisma_routes/category.js'
+import {category_cache_reset, categoy_cache} from '#db_cache/category.js'
 import {Category} from '#interfaces/category.js'
 
 export const category = async (fastify: FastifyInstance) => {
@@ -12,6 +13,7 @@ export const category = async (fastify: FastifyInstance) => {
         try {
             const {name} = req.body as Category
             await create_category(name)
+            await category_cache_reset()
             return res.status(201).send({message: 'sucess'})
         } catch (err) {
             return res.status(500).send({message: 'Internal Server Error'})
@@ -22,6 +24,7 @@ export const category = async (fastify: FastifyInstance) => {
             const {name} = req.body as Category
             const {id} = req.params as {id: string}
             await update_category(id, name)
+            await category_cache_reset()
             return res.status(200).send({message: 'sucess'})
         } catch (err) {
             return res.status(500).send({message: 'Internal Server Error'})
@@ -31,14 +34,15 @@ export const category = async (fastify: FastifyInstance) => {
         try {
             const {id} = req.params as {id: string}
             await delete_category(id)
+            await category_cache_reset()
             return res.status(200).send({message: 'sucess'})
         } catch (err) {
-            return res.status(500).send({message: 'Internal Server Error'})
+            return res.status(500).send({message: `Internal Server Error ${err}`})
         }
     })
     fastify.get('/', async (req, res) => {
         try {
-            const categories = await all_categories()
+            const categories = await categoy_cache()
             return res.status(200).send({categories})
         } catch (err) {
             return res.status(500).send({message: 'Internal Server Error'})
