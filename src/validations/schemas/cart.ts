@@ -1,7 +1,7 @@
 import type {RouteShorthandOptions} from 'fastify'
 import {auth_guard} from '#middllewares/authGuard.js'
 
-export const opt_cart_create: RouteShorthandOptions = {
+export const opt_create_cart: RouteShorthandOptions = {
     preHandler: [auth_guard],
     schema: {
         body: {
@@ -15,7 +15,7 @@ export const opt_cart_create: RouteShorthandOptions = {
     }
 }
 
-export const opt_cart_update: RouteShorthandOptions = {
+export const opt_update_cart: RouteShorthandOptions = {
     preHandler: [auth_guard],
     schema: {
         params: {
@@ -37,7 +37,7 @@ export const opt_cart_update: RouteShorthandOptions = {
     }
 }
 
-export const opt_cart_delete: RouteShorthandOptions = {
+export const opt_delete_cart: RouteShorthandOptions = {
     preHandler: [auth_guard],
     schema: {
         params: {
@@ -50,6 +50,6 @@ export const opt_cart_delete: RouteShorthandOptions = {
     }
 }
 
-export const opt_cart_get: RouteShorthandOptions = {
+export const opt_get_cart: RouteShorthandOptions = {
     preHandler: [auth_guard]
 }

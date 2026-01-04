@@ -1,7 +1,7 @@
 import prisma from '../index.js'
 
-export const create_cart = async (id: string, product_id: string, quantity: number) => {
-    const cart_item = await prisma.$transaction(async (prisma) => {
+export const db_create_cart = async (id: string, product_id: string, quantity: number) => {
+    const data = await prisma.$transaction(async (prisma) => {
         const product = await prisma.product.findUnique({
             where: {id: product_id},
             select: {
@@ -26,14 +26,14 @@ export const create_cart = async (id: string, product_id: string, quantity: numb
             },
             select: { quantity: true, productId: true}
         })
-        return new_cart_item
+        return {message: 'sucess'}
         } else return {message: 'no Stock'}
     })
     prisma.$disconnect()
-    return cart_item
+    return data
 }
 
-export const update_cart = async (cart_id: string, quantity: number)  => {
+export const db_update_cart = async (cart_id: string, quantity: number)  => {
     const cart_product = await prisma.cartItem.findUnique({
         where: {id: cart_id},
         select: {stock: true}
@@ -51,10 +51,10 @@ export const update_cart = async (cart_id: string, quantity: number)  => {
         return {message: 'No Stock'} 
     }
     prisma.$disconnect()
-    return {message: 'Sucess'} 
+    return {message: 'sucess'} 
 }
 
-export const delete_cart_item = async (cart_id: string) => {
+export const db_delete_cart_item = async (cart_id: string) => {
     await prisma.cartItem.delete({
         where: {id: cart_id},
         select: {productId: true}
@@ -62,7 +62,7 @@ export const delete_cart_item = async (cart_id: string) => {
     prisma.$disconnect()
 }
 
-export const get_cart = async (id: string) => {
+export const db_get_cart = async (id: string) => {
     const cart = await prisma.$transaction(async (prisma) => {
         const cart = await prisma.cart.findUnique({
             where: {userId: id},

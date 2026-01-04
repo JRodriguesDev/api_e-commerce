@@ -1,75 +1,79 @@
 import type {FastifyInstance} from 'fastify'
 import cookie from '@fastify/cookie'
 
-import {opt_pages_product, opt_product_create, opt_product_update, opt_user_delete, opt_find_product, opt_category_products} from '../validations/schemas/product.js'
-import {create_product, update_product, delete_product, category_products} from '#prisma_routes/product.js'
-import { Product } from '#interfaces/product.js'
+import {opt_pages_product, opt_create_product, opt_update_product, opt_delete_product, opt_find_product, opt_category_products} from '../validations/schemas/product.js'
+import {db_create_product, db_update_product, db_delete_product, db_category_products} from '#prisma_routes/product.js'
 import {product_cache, product_cache_version, product_perfil_cache, product_perfil_reset} from '#db_cache/product.js'
+import { Product } from '#interfaces/product.js'
+import {RequestUser} from '#interfaces/request.js'
 
 export const product = async (fastify: FastifyInstance) => {
     fastify.register(cookie, {secret: process.env.COOKIE_SECRET, hook: 'onRequest'})
 
-    fastify.post('/product', opt_product_create, async (req, res) => {
+    fastify.post('/', opt_create_product, async (req, res) => {
         try {
             const {...data} = req.body as Product
-            const product = await create_product(req.user!.id, data)
+            const {id} = req.user! satisfies Pick<RequestUser, 'id'>
+            await db_create_product(id, data)
             await product_cache_version()
-            return res.status(201).send({product})
+            return res.status(201).send({status: 'sucess'})
         } catch (err) {
-            return res.status(500).send({message: `Internal Server ${err}`})
+            return res.status(500).send({status: `Internal Server ${err}`})
         }
     })
-    fastify.patch('/product/:id', opt_product_update, async (req, res) => {
+    fastify.patch('/:productId', opt_update_product, async (req, res) => {
         try {
-            const {id} = req.params as {id: string}
+            const {productId} = req.params as {productId: string}
+            const {id} = req.user! satisfies Pick<RequestUser, 'id'>
             const {...data} = req.body as Product
-            const product = await update_product(id, req.user!.id, data)
-            await product_perfil_reset(id)
+            await db_update_product(productId, id, data)
+            await product_perfil_reset(productId)
             await product_cache_version()
-            return res.status(200).send({product})
+            return res.status(200).send({status: 'sucess'})
         } catch (err) {
-            return res.status(401).send({message: 'Product Not Found or Unauthorized'})
+            return res.status(401).send({status: 'Product Not Found or Unauthorized'})
         }
     })
-    fastify.delete('/product/:id', opt_user_delete, async (req, res) => {
+    fastify.delete('/:productId', opt_delete_product, async (req, res) => {
         try {
-            const {id} = req.params as {id: string}
-            await delete_product(id, req.user!.id)
-            await product_perfil_reset(id)
+            const {productId} = req.params as {productId: string}
+            const {id} = req.user! satisfies Pick<RequestUser, 'id'>
+            await db_delete_product(productId, id)
+            await product_perfil_reset(productId)
             await product_cache_version()
-            return res.status(200).send({message: 'sucess'})
+            return res.status(200).send({status: 'sucess'})
         } catch (err) {
-            return res.status(401).send({message: 'Product Not Found or Unauthorized'})
+            return res.status(401).send({status: 'Product Not Found or Unauthorized'})
         }
     })
-    fastify.get('/', opt_pages_product, async (req, res) => {
+    fastify.get('/products', opt_pages_product, async (req, res) => {
         try {
             const {limit, page} = req.query as {limit: number, page: number}
             const skip = (page - 1) * limit
             const products = await product_cache(limit, skip)
-            return res.status(200).send({products: products})
+            return res.status(200).send({status: 'sucess', products})
         } catch (err) {
-            return res.status(500).send({message: 'Internal Server Error'})
+            return res.status(500).send({status: 'Internal Server Error'})
         }
     })
-    fastify.get('/:category', opt_category_products, async (req, res) => {
+    fastify.get('/products/:category', opt_category_products, async (req, res) => {
         try {
             const {category} = req.params as {category: string}
             const {limit, page} = req.query as {limit: number, page: number}
             const skip = (page - 1) * limit
-            const products = await category_products(category, limit, skip)
-            return {products: products}
+            const products = await db_category_products(category, limit, skip)
+            return res.status(200).send({status: 'sucess', products})
         } catch (err) {
-            return res.status(400).send({message: `Category Not Found ${err}`})
+            return res.status(400).send({status: `Category Not Found ${err}`})
         }
     })
-    fastify.get('/product/:id', opt_find_product, async (req, res) => {
+    fastify.get('/:productId', opt_find_product, async (req, res) => {
         try {
-            const {id} = req.params as {id: string}
-            const products = await product_perfil_cache(id)
-            return res.status(200).send({products})
+            const {productId} = req.params as {productId: string}
+            const products = await product_perfil_cache(productId)
+            return res.status(200).send({status: 'sucess', products})
         } catch (err) {
-            return res.status(400).send({message: 'Product Not Found'})
+            return res.status(400).send({status: 'Product Not Found'})
         }
     })
 

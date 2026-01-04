@@ -27,9 +27,9 @@ export const opt_update_plan: RouteShorthandOptions = {
         params: {
             type: 'object',
             properties: {
-                id: {type: 'string'}
+                planId: {type: 'string'}
             },
-            required: ['id']
+            required: ['planId']
         },
         body: {
             type: 'object',
@@ -53,9 +53,9 @@ export const opt_delete_plan: RouteShorthandOptions = {
         params: {
             type: 'object',
             properties: {
-                id: {type: 'string'}
+                planId: {type: 'string'}
             },
-            required: ['id']
+            required: ['planId']
         }
     }
 }

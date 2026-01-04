@@ -46,6 +46,7 @@
       "./build/utils/*"
     ],
     "#middllewares/*": ["./build/validations/middlewares/*"],
+    "#prisma_seed/*": ["./build/services/prisma/seed/*"],
     "#prisma": [
       "./build/services/prisma/index.js"
     ],

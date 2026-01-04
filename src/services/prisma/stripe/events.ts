@@ -4,7 +4,7 @@ import {orderCache} from '#interfaces/order.js'
 
 export const session_state_expire = async (data: orderCache) => {
     try {
-        const order = await prisma.order.update({
+        await prisma.order.update({
             where: {id: data.orderId},
             data: {
                 status: 'EXPIRE',
@@ -19,7 +19,7 @@ export const session_state_expire = async (data: orderCache) => {
 
 export const payment_state_failed = async (data: orderCache) => {
     try {
-        const order = await prisma.order.update({
+        await prisma.order.update({
             where: {id: data.orderId},
             data: {
                 status: 'FAILED',
@@ -27,7 +27,7 @@ export const payment_state_failed = async (data: orderCache) => {
                 paymentError: data.paymentError,
                 mode: data.mode,
                 totalAmount: data.totalAmount,
-                stripePaymentIntentId: data.paymentIntentId
+                paymentIntentId: data.paymentIntentId
             }
         })
     } catch (err) {
@@ -44,7 +44,7 @@ export const payment_state_paid = async (data: orderCache) => {
                     status: 'PAID',
                     mode: data.mode,
                     paymentType: data.paymentType,
-                    stripePaymentIntentId: data.paymentIntentId,
+                    paymentIntentId: data.paymentIntentId,
                     totalAmount: Number(data.totalAmount)
                 },
                 select: {userId: true}

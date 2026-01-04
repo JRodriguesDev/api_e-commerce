@@ -1,14 +1,14 @@
 import prisma from '../index.js'
 
-export const order_update = async (id: string, session_id: string) => {
+export const db_order_update = async (id: string, session_id: string) => {
     await prisma.order.update({
         where: {id: id},
-        data: {stripeSessionId: session_id}
+        data: {sessionId: session_id}
     })
     prisma.$disconnect()
 }
 
-export const order_get = async (id: string) => {
+export const db_order_get = async (id: string) => {
     const orders = await prisma.user.findUnique({
         where: {id: id},
         include: {orders: true}

@@ -1,48 +1,32 @@
 import prisma from '../index.js'
 
 
-export const review_create = async (id: string, productId: string, rating: number, comment: string) => {
-    const review = await prisma.reviews.create({
+export const db_review_create = async (id: string, productId: string, comment: string) => {
+    await prisma.reviews.create({
         data: {
-            rating,
             comment,
             product: {connect: {id: productId}},
             author: {connect: {id: id}}
-        },
-        select: {
-            comment: true,
-            date: true,
-            rating: true,
-            id: true,
-            author: {select: {name: true, id: true}}
         }
     })
     prisma.$disconnect()
-    return review
 }
 
-export const review_update = async (id: string, author_id: string, body: {}) => {
+export const db_review_update = async (id: string, author_id: string, body: {}) => {
     const review = await prisma.reviews.update({
         where: {id: id, authorId: author_id},
         data: {...body},
-        select: {
-            comment: true,
-            date: true,
-            rating: true,
-            id: true,
-            productId: true,
-            author: {select: {name: true, id: true}}
-        }
+        select: {productId: true}
     })
     prisma.$disconnect()
     return review
 }
 
-export const review_delete = async (id: string, author_id: string) => {
+export const db_review_delete = async (id: string, author_id: string) => {
     const review = await prisma.reviews.delete({
         where: {id: id, authorId: author_id},
         select: {productId: true}
     })
-    return review
     prisma.$disconnect()
+    return review
 }

@@ -5,8 +5,8 @@ model Order {
     items OrderItem[]
     mode Mode?
     totalAmount Int?
-    stripeSessionId String?
-    stripePaymentIntentId String? @unique
+    sessionId String?
+    paymentIntentId String? @unique
     paymentType String[]
     paymentError String?
 

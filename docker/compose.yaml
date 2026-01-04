@@ -33,8 +33,6 @@ services:
     command: listen --forward-to http://node:3000/webhooks/stripe
     networks:
       - api
-    depends_on:
-      - node
   redis:
     build: 
       context: ..

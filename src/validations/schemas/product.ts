@@ -1,8 +1,7 @@
 import type {RouteShorthandOptions} from 'fastify'
 import {auth_guard, seller_guard} from '#middllewares/authGuard.js'
-import {product_create_schema} from '../zod/product.js'
 
-export const opt_product_create: RouteShorthandOptions = {
+export const opt_create_product: RouteShorthandOptions = {
     preHandler: [auth_guard, seller_guard],
     schema: {
         body: {
@@ -21,9 +20,16 @@ export const opt_product_create: RouteShorthandOptions = {
     }
 }
 
-export const opt_product_update: RouteShorthandOptions = {
+export const opt_update_product: RouteShorthandOptions = {
     preHandler: [auth_guard, seller_guard],
     schema: {
+        params: {
+            type: 'object',
+            properties: {
+                productId: {type: 'string'}
+            },
+            required: ['productId']
+        },
         body: {
             type: 'object',
             properties: {
@@ -48,8 +54,17 @@ export const opt_product_update: RouteShorthandOptions = {
     }
 }
 
-export const opt_user_delete: RouteShorthandOptions = {
-    preHandler: [auth_guard, seller_guard]
+export const opt_delete_product: RouteShorthandOptions = {
+    preHandler: [auth_guard, seller_guard],
+    schema: {
+        params: {
+            type: 'object',
+            properties: {
+                productId: {type: 'string'}
+            },
+            required: ['productId']
+        }
+    }
 }
 
 export const opt_find_product: RouteShorthandOptions = {
@@ -57,9 +72,9 @@ export const opt_find_product: RouteShorthandOptions = {
         params: {
             type: 'object',
             properties: {
-                id: {type: 'string'}
+                productId: {type: 'string'}
             },
-            required: ['id']
+            required: ['productId']
         }
     }
 }

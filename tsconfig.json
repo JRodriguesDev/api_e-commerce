@@ -20,7 +20,8 @@
             "#zod*": ["./src/validations/zod/*"],
             "#utils/*": ["./src/utils/*"],
             "#middllewares/*": ["./src/validations/middlewares/*"],
-            
+            "#prisma_seed/*": ["./src/services/prisma/seed/*"],
+
             "#prisma": ["./src/services/prisma/index.ts"],
             "#prisma_stripe/*": ["./src/services/prisma/stripe/*"],
             "#prisma_routes/*": ["./src/services/prisma/routes/*"],

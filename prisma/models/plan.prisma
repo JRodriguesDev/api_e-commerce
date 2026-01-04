@@ -1,7 +1,6 @@
 model Plan {
     id String @id @default(nanoid())
     name String
-    discountPercent Int
     price Float
 
     createdAt DateTime @default(now())

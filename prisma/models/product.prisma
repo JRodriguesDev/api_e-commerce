@@ -4,7 +4,6 @@ model Product {
     description String
     category String
     price Float
-    rating Float
     stock Int
     images String[]
     thumbnail String

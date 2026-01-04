@@ -2,7 +2,7 @@ import type {RouteShorthandOptions} from 'fastify'
 import {user_create_schema, user_password_schema, user_login_schema} from '../zod/user.js'
 import {auth_guard} from '#middllewares/authGuard.js'
 
-export const opt_user_create: RouteShorthandOptions = {
+export const opt_create_user: RouteShorthandOptions = {
     preHandler: [user_create_schema],
     schema: {
         body: {
@@ -17,7 +17,7 @@ export const opt_user_create: RouteShorthandOptions = {
     }
 }
 
-export const opt_user_login: RouteShorthandOptions = {
+export const opt_login_user: RouteShorthandOptions = {
     preHandler: [user_login_schema],
     schema: {
         body: {
@@ -31,7 +31,7 @@ export const opt_user_login: RouteShorthandOptions = {
     }
 }
 
-export const opt_user_search: RouteShorthandOptions = {
+export const opt_search_user: RouteShorthandOptions = {
     schema: {
         querystring: {
             properties : {
@@ -42,7 +42,7 @@ export const opt_user_search: RouteShorthandOptions = {
     }
 }
 
-export const opt_user_find: RouteShorthandOptions = {
+export const opt_find_user: RouteShorthandOptions = {
     schema: {
         params: {
             type: 'object',
@@ -54,7 +54,7 @@ export const opt_user_find: RouteShorthandOptions = {
     }
 }
 
-export const opt_user_update: RouteShorthandOptions = {
+export const opt_update_user: RouteShorthandOptions = {
     preHandler: auth_guard,
     schema: {
         body: {
@@ -84,10 +84,10 @@ export const opt_user_password: RouteShorthandOptions = {
     }
 }
 
-export const opt_user_delete: RouteShorthandOptions = {
+export const opt_delete_user: RouteShorthandOptions = {
     preHandler: [auth_guard]
 }
 
-export const opt_user_get: RouteShorthandOptions = {
+export const opt_get_user: RouteShorthandOptions = {
     preHandler: [auth_guard]
 }

@@ -1,7 +1,6 @@
-import { user } from '../../../routes/user.js'
 import prisma  from '../index.js'
 
-export const user_create = async (name: string, email: string, password: string, customer_id: string) => {
+export const db_create_user = async (name: string, email: string, password: string, customer_id: string) => {
     const [user, cart] = await prisma.$transaction(async (prisma) => {
         const new_user = await prisma.user.create({
             data: {
@@ -31,7 +30,7 @@ export const user_create = async (name: string, email: string, password: string,
     return {user, cart}
 }
 
-export const user_update = async (id: string, name: string, email: string) => {
+export const db_update_user = async (id: string, name: string, email: string) => {
     const user = await prisma.user.update({
         where: {id: id},
         data: {
@@ -47,7 +46,7 @@ export const user_update = async (id: string, name: string, email: string) => {
     return user
 }
 
-export const user_password = async (id: string, password: string) => {
+export const db_user_password = async (id: string, password: string) => {
     const user = await prisma.user.update({
         where: {id: id},
         data: {password: password},
@@ -57,7 +56,7 @@ export const user_password = async (id: string, password: string) => {
     return user
 }
 
-export const user_delete = async (id: string) => {
+export const db_delete_user = async (id: string) => {
     const data = await prisma.$transaction(async (prisma) => {
         const user = await prisma.user.delete({
         where: {id: id},
@@ -69,7 +68,7 @@ export const user_delete = async (id: string) => {
     return data
 }
 
-export const user_login = async (email: string) => {
+export const db_login_user = async (email: string) => {
     const user = await prisma.user.findUnique({
         where: {email},
         include: {
@@ -81,7 +80,7 @@ export const user_login = async (email: string) => {
     return user
 }
 
-export const user_get = async (id: string) => {
+export const db_get_user = async (id: string) => {
     const user = await prisma.user.findUnique({
         where: {id: id},
             omit: {password: true},
@@ -94,7 +93,7 @@ export const user_get = async (id: string) => {
     return user
 }
 
-export const user_search = async (name: string) => {
+export const db_search_user = async (name: string) => {
     const user = await prisma.user.findMany({
         where: {
             name: {
@@ -111,7 +110,7 @@ export const user_search = async (name: string) => {
     return user
 }
 
-export const user_find = async (id: string) => {
+export const db_find_user = async (id: string) => {
     const user = await prisma.user.findUnique({
         where: {id: id},
         omit: {password: true, /*role: true*/ email: true},

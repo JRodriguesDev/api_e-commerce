@@ -1,7 +1,5 @@
-
 model Reviews {
     id String @id @default(nanoid())
-    rating Float
     comment String
     date DateTime @default(now())
 
