@@ -85,7 +85,7 @@ Clone o repositório e instale as dependências locais:
 **Configuração do Redis**
 Para a segurança do container de cache, crie um arquivo chamado **[redis.conf](https://github.com/redis/redis/blob/unstable/redis.conf)** na raiz do projeto e adicione os seguintes parâmetros:
 ```
-    bind 0.0.0.0 -::1
+    bind 0.0.0.0 -::1 # para não ocorrer erros apague o bind anterior ja existente no arquivo
     user default off
     user root on ><redis password> ~* +@all
 ```
