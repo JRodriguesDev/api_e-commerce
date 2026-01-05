@@ -60,8 +60,7 @@ Abaixo, detalho o papel de cada diretório na arquitetura do sistema, focando na
   - ``prisma/``: Contém os routes (operações de banco consumidas pela API) e a seed para popular cargos e usuários padrão.
   - ``redis/``:
     - ``db/``: Otimização de performance para rotas de alta leitura (Produtos, Planos e Categorias).
-    - ``stripe/``: Otimização de Cache de Order.
-  - ``stripe/``: Utilizado como cache estratégico para armazenar dados de Orders, permitindo acesso rápido a informações que a API da Stripe não retorna de forma imediata.
+    - ``stripe/``: Utilizado como cache estratégico para armazenar dados de Orders, permitindo acesso rápido a informações que a API da Stripe não retorna de forma imediata.
   - ``stripe/``: Implementação técnica dos eventos da Stripe, tratando faturas, sessões e assinaturas.
   - ``swagger/``: Configuração da documentação OpenAPI para visualização no Swagger UI.
 - ``src/validations/``: Centraliza a segurança de dados com Zod para tipagem em runtime e Middlewares para controle de acesso baseado em cargos.
