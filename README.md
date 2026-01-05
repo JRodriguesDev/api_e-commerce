@@ -55,10 +55,10 @@ Abaixo, detalho o papel de cada diretório na arquitetura do sistema, focando na
 - ``src/prisma/``: Armazena o Schema e o cliente gerado do Prisma ORM para a persistência de dados no PostgreSQL.
 - ``src/routes/``: Definição modular de todos os endpoints da API, organizada por domínios e registrada centralmente no index.ts.
 - ``src/services/``: Camada de infraestrutura e serviços externos:
-- ``fastify_plugins/``: Encapsula a configuração de plugins como CORS, Cookies e o Decorator do Prisma.
-- ``jwt/``: Gerenciamento de tokens de acesso e segurança da sessão.
-- ``prisma/``: Contém os routes (operações de banco consumidas pela API) e a seed para popular cargos e usuários padrão.
-- ``redis/``:
+  - ``fastify_plugins/``: Encapsula a configuração de plugins como CORS, Cookies e o Decorator do Prisma.
+  - ``jwt/``: Gerenciamento de tokens de acesso e segurança da sessão.
+  - ``prisma/``: Contém os routes (operações de banco consumidas pela API) e a seed para popular cargos e usuários padrão.
+  - ``redis/``:
   - ``db/``: Otimização de performance para rotas de alta leitura (Produtos, Planos e Categorias).
   - ``stripe/``: Utilizado como cache estratégico para armazenar dados de Orders, permitindo acesso rápido a informações que a API da Stripe não retorna de forma imediata.
   - ``stripe/``: Implementação técnica dos eventos da Stripe, tratando faturas, sessões e assinaturas.
