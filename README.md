@@ -79,6 +79,7 @@ Clone o repositório e instale as dependências locais:
       git clone https://github.com/JRodriguesDev/api_e-commerce.git
       cd api_e-commerce
       npm install
+      npx prisma generate
 ```
 
 **Configuração do Redis**
