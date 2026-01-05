@@ -98,8 +98,8 @@ Crie um arquivo .env na raiz do projeto. **Importante**: Substitua ``<password>`
     POSTGRES_DB=ecommerce
     STRIPE_SECRET="" # Senha da stripe secret obtida na Stripe
     STRIPE_CLI_SECRET="" # Será obtido após o primeiro login no container
-    JWT_PASSWORD=""
-    COOKIE_SECRET=""
+    JWT_PASSWORD="<password>" 
+    COOKIE_SECRET="<password>"
     DATABASE_URL="postgresql://root:<POSTGRES_PASSWORD>@postgres:5432/ecommerce?schema=public"
     REDIS_URL='redis://root:<redis password>@redis:6379'
     START='DEFAULT'
@@ -114,7 +114,7 @@ O setup inicial é dividido em duas etapas para garantir a correta autenticaçã
 ```
 
 - Com os containers rodando, observe os logs. Clique no link de autenticação gerado pelo container da Stripe para vincular sua conta.
-- Após a verificação, você terá acesso ao ``STRIPE_CLI_SECRET``.
+- Após a verificação, você terá acesso ao ``STRIPE_CLI_SECRET`` apos reiniciar.
 
 **Passo B**: Migração do Banco de Dados
 Com os containers ativos, abra um novo terminal e acesse o container da aplicação para executar as migrações do Prisma:
