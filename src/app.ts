@@ -4,15 +4,26 @@ import hooks from './hooks/index.js'
 import {prisma_plugin} from './services/fastify_plugins/index.js'
 import {default_roles, default_user} from '#prisma_seed/default.js'
 
+import fastifySwagger from "@fastify/swagger";
+import fastifySwaggerUi from "@fastify/swagger-ui";
+import {swagger_config, swagger_ui_config} from '#swagger'
+import cors from '@fastify/cors'
+
 const fastify = Fastify({
     logger: true
 })
 
-//Plugins
-fastify.register(prisma_plugin)
+await fastify.register(cors, {origin: 'true', credentials: true, methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']})
 
-//Routes
+//Plugins
+await fastify.register(prisma_plugin)
+
+//Hooks
 await hooks(fastify)
+
+//Swagger
+await fastify.register(fastifySwagger, swagger_config)
+await fastify.register(fastifySwaggerUi, swagger_ui_config)
 
 //Routes
 await routes(fastify)

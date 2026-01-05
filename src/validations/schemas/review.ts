@@ -5,6 +5,10 @@ import {auth_guard} from '#middllewares/authGuard.js'
 export const opt_create_review: RouteShorthandOptions = {
     preHandler: [auth_guard, review_create_schema],
     schema: {
+        tags: ['Review'],
+        summary: 'Criar Review',
+        description: 'Cria review usando credenciais do cookie',
+        security: [{cookieGuard: []}],
         body: {
             type: 'object',
             properties: {
@@ -19,6 +23,10 @@ export const opt_create_review: RouteShorthandOptions = {
 export const opt_update_review: RouteShorthandOptions = {
     preHandler: [auth_guard],
     schema: {
+        tags: ['Review'],
+        summary: 'Edita Review',
+        description: 'Edita review usando credenciais do cookie',
+        security: [{cookieGuard: []}],
         params: {
             type: 'object',
             properties: {
@@ -41,6 +49,10 @@ export const opt_update_review: RouteShorthandOptions = {
 export const opt_delete_review: RouteShorthandOptions = {
     preHandler: [auth_guard],
     schema: {
+        tags: ['Review'],
+        summary: 'Deleta Review',
+        description: 'Deleta review usando credenciais do cookie',
+        security: [{cookieGuard: []}],
         params: {
             type: 'object',
             properties: {

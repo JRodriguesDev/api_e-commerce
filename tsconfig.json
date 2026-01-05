@@ -21,6 +21,7 @@
             "#utils/*": ["./src/utils/*"],
             "#middllewares/*": ["./src/validations/middlewares/*"],
             "#prisma_seed/*": ["./src/services/prisma/seed/*"],
+            "#swagger": ["./src/services/swagger/index.ts"],
 
             "#prisma": ["./src/services/prisma/index.ts"],
             "#prisma_stripe/*": ["./src/services/prisma/stripe/*"],

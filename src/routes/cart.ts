@@ -16,7 +16,7 @@ export const cart = async (fastify: FastifyInstance) => {
             const cart = await db_create_cart(id, productId, quantity)
             return res.status(200).send({status: 'sucess', cart})
         } catch (err) {
-            return res.status(401).send({status: `ser Not Found or Unauthorized ${err}`})
+            return res.status(401).send({message: `ser Not Found or Unauthorized ${err}`})
         }
     })
     fastify.patch('/:cartId', opt_update_cart, async (req, res) => {
@@ -26,7 +26,7 @@ export const cart = async (fastify: FastifyInstance) => {
             const cart = await db_update_cart(cartId, quantity)
             return res.status(200).send({status: 'sucess', cart})
         } catch (err) {
-            return res.status(401).send({status: `User Not Found or Unauthorized ${err}`})
+            return res.status(401).send({message: `User Not Found or Unauthorized ${err}`})
         }
     })
     fastify.delete('/:cartId', opt_delete_cart, async (req, res) => {
@@ -35,7 +35,7 @@ export const cart = async (fastify: FastifyInstance) => {
             await db_delete_cart_item(cartId)
             return res.status(200).send({status: 'sucess'})
         } catch (err) {
-            return res.status(401).send({status: `User Not Found or Unauthorized ${err}`})
+            return res.status(401).send({message: `User Not Found or Unauthorized ${err}`})
         }
     })
     fastify.get('/', opt_get_cart, async (req, res) => {
@@ -44,7 +44,7 @@ export const cart = async (fastify: FastifyInstance) => {
             const cart = await db_get_cart(id)
             return res.status(200).send({status: 'sucess', cart})
         } catch (err) {
-            return res.status(401).send({status: `User Not Found or Unauthorized ${err}`})
+            return res.status(401).send({message: `User Not Found or Unauthorized ${err}`})
         }
     })
 }

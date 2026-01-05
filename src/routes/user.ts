@@ -23,7 +23,7 @@ export const user = async (fastify: FastifyInstance) => {
                 .status(200)
                 .send({status:'sucess'})
         } catch (err) {
-            return res.status(400).send({status: 'Email not Found'})
+            return res.status(400).send({message: 'Email not Found'})
         }
     })
     fastify.post('/', opt_create_user, async (req, res) => {
@@ -39,7 +39,40 @@ export const user = async (fastify: FastifyInstance) => {
                 .code(201)
                 .send({status:'sucess'})
         } catch (err) {
-            return res.status(500).send({status: `Internal Server Error ${err}`})
+            return res.status(500).send({message: `Internal Server Error ${err}`})
+        }
+    })
+    fastify.patch('/', opt_update_user, async (req, res) => {
+        try {
+            const {name, email} = req.body as User
+            const user = await db_update_user(req.user!.id, name, email)
+            await update_customer(user.stripeProfile!.id, {name, email})
+            return res
+                .status(200)
+                .send({status: 'sucess', user: {name: user!.name, email: user!.email}})
+        } catch (err) {
+            return res.status(401).send({message: 'User Not Found or Unauthorized'})
+        }
+    })
+    fastify.delete('/', opt_delete_user, async (req, res) => {
+        try {
+            const user_data = await db_delete_user(req.user!.id)
+            await delete_customer(user_data.stripeProfile!.id)
+            return res.status(200).send({status: 'sucess'})
+        } catch (err) {
+            return res.status(401).send({message: `User Not Found or Unauthorized ${err}`})
+        }
+    })
+    fastify.patch('/password', opt_user_password, async (req, res) => {
+        const {password} = req.body as User
+        try {
+            const hash_password = await bcrypt.hash(password, 10)
+            await db_user_password(req.user!.id, hash_password)
+            return res
+                .status(200)
+                .send({status: 'sucess'})
+        } catch (err) {
+            return res.status(401).send({message: 'User Not Found or Unauthorized'})
         }
     })
     fastify.get('/', opt_get_user, async (req, res) => {
@@ -52,40 +85,16 @@ export const user = async (fastify: FastifyInstance) => {
                 .status(200)
                 .send({user: {id: user!.id, name: user!.name, email: user!.email}, roles: user!.role.map(r => r.role.name)})
         } catch (err) {
-            return res.status(401).send({status: `User Not Found or Unauthorized ${err}`})
+            return res.status(401).send({message: `User Not Found or Unauthorized ${err}`})
         }
     })
-    fastify.patch('/', opt_update_user, async (req, res) => {
+    fastify.get('/user/:userId', opt_find_user, async (req, res) => {
         try {
-            const {name, email} = req.body as User
-            const user = await db_update_user(req.user!.id, name, email)
-            await update_customer(user.stripeProfile!.id, {name, email})
-            return res
-                .status(200)
-                .send({status: 'sucess', user: {name: user!.name, email: user!.email}})
+            const {userId} = req.params as {userId: string}
+            const user = await db_find_user(userId)
+            return res.status(200).send({status: 'sucess', user})
         } catch (err) {
-            return res.status(401).send({status: 'User Not Found or Unauthorized'})
-        }
-    }) 
-    fastify.patch('/password', opt_user_password, async (req, res) => {
-        const {password} = req.body as User
-        try {
-            const hash_password = await bcrypt.hash(password, 10)
-            await db_user_password(req.user!.id, hash_password)
-            return res
-                .status(200)
-                .send({status: 'sucess'})
-        } catch (err) {
-            return res.status(401).send({status: 'User Not Found or Unauthorized'})
-        }
-    })
-    fastify.delete('/', opt_delete_user, async (req, res) => {
-        try {
-            const user_data = await db_delete_user(req.user!.id)
-            await delete_customer(user_data.stripeProfile!.id)
-            return res.status(200).send({status: 'sucess'})
-        } catch (err) {
-            return res.status(401).send({status: `User Not Found or Unauthorized ${err}`})
+            return res.status(500).send({message: 'Internal Server Error'})
         }
     })
     fastify.get('/users', opt_search_user, async (req, res) => {
@@ -94,16 +103,8 @@ export const user = async (fastify: FastifyInstance) => {
             const user = await db_search_user(name)
             return res.status(200).send({status: 'sucess', user})
         } catch (err) {
-            return res.status(500).send({status: 'Internal Server Error'})
+            return res.status(500).send({message: 'Internal Server Error'})
         }
     })
-    fastify.get('/user/:id', opt_find_user, async (req, res) => {
-        try {
-            const {id} = req.params as {id: string}
-            const user = await db_find_user(id)
-            return res.status(200).send({status: 'sucess', user})
-        } catch (err) {
-            return res.status(500).send({status: 'Internal Server Error'})
-        }
-    })
+    
 }

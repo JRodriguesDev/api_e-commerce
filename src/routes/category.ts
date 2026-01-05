@@ -1,7 +1,7 @@
 import type {FastifyInstance} from 'fastify'
 import cookie from '@fastify/cookie'
 
-import {opt_category_create, opt_category_update, opt_category_delete} from '../validations/schemas/category.js'
+import {opt_category_create, opt_category_update, opt_category_delete, opt_category_all} from '../validations/schemas/category.js'
 import {db_create_category, db_update_category, db_delete_category} from '#prisma_routes/category.js'
 import {category_cache_reset, categoy_cache} from '#db_cache/category.js'
 import {Category} from '#interfaces/category.js'
@@ -16,7 +16,7 @@ export const category = async (fastify: FastifyInstance) => {
             await category_cache_reset()
             return res.status(201).send({status: 'sucess'})
         } catch (err) {
-            return res.status(500).send({status: 'Internal Server Error'})
+            return res.status(500).send({message: 'Internal Server Error'})
         }
     })
     fastify.patch('/:categoryId', opt_category_update, async (req, res) => {
@@ -27,25 +27,25 @@ export const category = async (fastify: FastifyInstance) => {
             await category_cache_reset()
             return res.status(200).send({status: 'sucess'})
         } catch (err) {
-            return res.status(500).send({status: 'Internal Server Error'})
+            return res.status(500).send({message: 'Internal Server Error'})
         }
     })
-    fastify.delete('/:id', opt_category_delete, async (req, res) => {
+    fastify.delete('/:categoryId', opt_category_delete, async (req, res) => {
         try {
-            const {id} = req.params as {id: string}
-            await db_delete_category(id)
+            const {categoryId} = req.params as {categoryId: string}
+            await db_delete_category(categoryId)
             await category_cache_reset()
             return res.status(200).send({status: 'sucess'})
         } catch (err) {
-            return res.status(500).send({status: `Internal Server Error ${err}`})
+            return res.status(500).send({message: `Internal Server Error ${err}`})
         }
     })
-    fastify.get('/', async (req, res) => {
+    fastify.get('/', opt_category_all, async (req, res) => {
         try {
             const categories = await categoy_cache()
             return res.status(200).send({categories})
         } catch (err) {
-            return res.status(500).send({status: 'Internal Server Error'})
+            return res.status(500).send({message: 'Internal Server Error'})
         }
     })
 }

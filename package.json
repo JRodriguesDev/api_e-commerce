@@ -18,6 +18,9 @@
   },
   "dependencies": {
     "@fastify/cookie": "^11.0.2",
+    "@fastify/cors": "^11.2.0",
+    "@fastify/swagger": "^9.6.1",
+    "@fastify/swagger-ui": "^5.2.4",
     "@prisma/client": "^6.19.0",
     "bcryptjs": "^3.0.3",
     "dotenv": "^17.2.3",
@@ -45,26 +48,47 @@
     "#utils/*": [
       "./build/utils/*"
     ],
-    "#middllewares/*": ["./build/validations/middlewares/*"],
-    "#prisma_seed/*": ["./build/services/prisma/seed/*"],
+    "#middllewares/*": [
+      "./build/validations/middlewares/*"
+    ],
+    "#prisma_seed/*": [
+      "./build/services/prisma/seed/*"
+    ],
+    "#swagger": [
+      "./build/services/swagger/index.js"
+    ],
     "#prisma": [
       "./build/services/prisma/index.js"
     ],
     "#prisma_stripe/*": [
       "./build/services/prisma/stripe/*"
     ],
-    "#prisma_routes/*": ["./build/services/prisma/routes/*"],
+    "#prisma_routes/*": [
+      "./build/services/prisma/routes/*"
+    ],
     "#stripe_core/*": [
       "./build/services/stripe/core/*"
     ],
-    "#stripe_checkout/*": ["./build/services/stripe/session/*"],
+    "#stripe_checkout/*": [
+      "./build/services/stripe/session/*"
+    ],
     "#stripe_hooks/*": [
       "./build/services/stripe/hooks/*"
     ],
-    "#stripe_payments/*": ["./build/services/stripe/payments/*"],
-    "#stripe_cache/*": ["./build/services/redis/stripe/*"],
-    "#db_cache/*": ["./build/services/redis/db/*"],
-    "#stripe_billing/*": ["./build/services/stripe/billing/*"],
-    "#logic_stripe/*": ["./build/logic/stripe/*"]
+    "#stripe_payments/*": [
+      "./build/services/stripe/payments/*"
+    ],
+    "#stripe_cache/*": [
+      "./build/services/redis/stripe/*"
+    ],
+    "#db_cache/*": [
+      "./build/services/redis/db/*"
+    ],
+    "#stripe_billing/*": [
+      "./build/services/stripe/billing/*"
+    ],
+    "#logic_stripe/*": [
+      "./build/logic/stripe/*"
+    ]
   }
 }
