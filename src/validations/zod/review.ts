@@ -3,7 +3,6 @@ import type { FastifyRequest, FastifyReply } from 'fastify'
 
 export const review_create_schema = async (req: FastifyRequest, res: FastifyReply) => {
     const zod_shema = z.object({
-        rating: z.number('required number'),
         comment: z.string('required string'),
         productId: z.string('required product id')
     })

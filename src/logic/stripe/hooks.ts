@@ -3,7 +3,9 @@ import {get_cache} from '#stripe_cache/events.js'
 import {payment_state_paid, payment_state_failed, session_state_expire, invoice_state_paid, subscription_state_update} from '#prisma_stripe/events.js'
 import {orderCache} from '#interfaces/order.js'
 
-export const invoce_succeeded = async (event: Stripe.InvoicePaymentSucceededEvent) => {
+
+// Evento usado quando uma fatura e paga
+export const invoice_succeeded = async (event: Stripe.InvoicePaymentSucceededEvent) => {
     const customer = event.data.object.customer
     const cache = await get_cache(`order:${customer}`)
     const data: orderCache = {
@@ -23,6 +25,7 @@ export const invoce_succeeded = async (event: Stripe.InvoicePaymentSucceededEven
     }
 }
 
+//Evento quando um pagamento e concluido
 export const payment_succeeded = async (event: Stripe.PaymentIntentSucceededEvent) => {
     const customer = event.data.object.customer
     const cache = await get_cache(`order:${customer}`)
@@ -42,6 +45,7 @@ export const payment_succeeded = async (event: Stripe.PaymentIntentSucceededEven
     }
 }
 
+//evento caso falhe o pagamento
 export const payment_failed = async (event: Stripe.PaymentIntentPaymentFailedEvent) => {
     const customer = event.data.object.customer
     const cache = await get_cache(`order:${customer}`)
@@ -61,14 +65,7 @@ export const payment_failed = async (event: Stripe.PaymentIntentPaymentFailedEve
     }
 }
 
-export const session_completed = async (event: Stripe.CheckoutSessionCompletedEvent) => {
-    const customer = event.data.object.customer
-    const cache = await get_cache(`order:${customer}`)
-    const data:orderCache = {
-        orderId: cache.orderId,
-    }
-}
-
+//evento quando a sessao e expirada
 export const session_expire = async (event: Stripe.CheckoutSessionExpiredEvent) => {
     const customer = event.data.object.customer
     const cache = await get_cache(`order:${customer}`)
@@ -85,6 +82,7 @@ export const session_expire = async (event: Stripe.CheckoutSessionExpiredEvent) 
     }
 }
 
+//evento quando o status da assinatura e mudada
 export const customer_subscription_update = async (event: Stripe.CustomerSubscriptionUpdatedEvent) => {
     const data: orderCache = {
         subscriptionId: event.data.object.id,

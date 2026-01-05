@@ -8,11 +8,10 @@ export const opt_create_review: RouteShorthandOptions = {
         body: {
             type: 'object',
             properties: {
-                rating: {type: 'number'},
                 comment: {type: 'string'},
                 productId: {type: 'string'},
             },
-            required: ['rating', 'comment', 'productId']
+            required: ['comment', 'productId']
         }
     }
 }
@@ -30,11 +29,9 @@ export const opt_update_review: RouteShorthandOptions = {
         body: {
             type: 'object',
             properties: {
-                rating: {type: 'number'},
                 comment: {type: 'string'},
             },
             anyOf: [
-                {required: ['rating']},
                 {required: ['comment']},
             ]
         }

@@ -6,28 +6,15 @@ export const opt_get_roles: RouteShorthandOptions = {
     preHandler: [auth_guard, admin_guard]
 }
 
-export const opt_create_role: RouteShorthandOptions = {
-    preHandler: [auth_guard, admin_guard],
-    schema: {
-        body: {
-            type: 'object',
-            properties: {
-                name: {type: 'string'}
-            },
-            required: ['name']
-        }
-    }
-}
-
 export const opt_set_role: RouteShorthandOptions = {
     preHandler: [auth_guard, admin_guard],
     schema: {
         params: {
             type: 'object',
             properties: {
-                roleId: {type: 'string'}
+                userId: {type: 'string'}
             },
-            required: ['roleId']
+            required: ['userId']
         },
         body: {
             type: 'object',
@@ -45,9 +32,9 @@ export const opt_remove_role: RouteShorthandOptions = {
         params: {
             type: 'object',
             properties: {
-                roleId: {type: 'string'}
+                userId: {type: 'string'}
             },
-            required: ['roleId']
+            required: ['userId']
         },
         body: {
             type: 'object',
@@ -55,19 +42,6 @@ export const opt_remove_role: RouteShorthandOptions = {
                 role: {type: 'string'}
             },
             required: ['role']
-        }
-    }
-}
-
-export const opt_delete_role: RouteShorthandOptions = {
-    preHandler: [auth_guard, admin_guard],
-    schema: {
-        params: {
-            type: 'object',
-            properties: {
-                roleId: {type: 'string'}
-            },
-            required: ['roleId']
         }
     }
 }

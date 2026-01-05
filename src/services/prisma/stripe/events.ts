@@ -35,6 +35,7 @@ export const payment_state_failed = async (data: orderCache) => {
     }
 }
 
+
 export const payment_state_paid = async (data: orderCache) => {
     try {
         await prisma.$transaction(async (prisma) => {

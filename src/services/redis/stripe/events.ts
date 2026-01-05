@@ -1,6 +1,7 @@
 import client from '../index.js'
 import {orderCache} from '#interfaces/order.js'
 
+// logica de guarda o id do order para usar nos hooks da stripe
 
 export const set_order_cache = async (key: string, data: {}) => {
     await client.hSet(`order:${key}`, {

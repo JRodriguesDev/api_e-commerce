@@ -7,15 +7,6 @@ export const db_get_roles = async () => {
     return roles
 }
 
-export const db_create_role = async (name: string) => {
-    const new_roles = await prisma.role.create({
-        data: {name: name},
-        select: {name: true}
-    })
-    prisma.$disconnect()
-    return new_roles
-}
-
 export const db_set_role = async (id: string, role: string) => {
     await prisma.user.update({
         where: {id: id},
@@ -46,10 +37,4 @@ export const db_remove_role = async (id: string, name: string) => {
         })
     })
     prisma.$disconnect()
-}
-
-export const db_delete_role = async (id: string) => {
-    await prisma.role.delete({
-        where: {id: id}
-    })
 }

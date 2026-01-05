@@ -19,11 +19,11 @@ export const category = async (fastify: FastifyInstance) => {
             return res.status(500).send({status: 'Internal Server Error'})
         }
     })
-    fastify.patch('/:id', opt_category_update, async (req, res) => {
+    fastify.patch('/:categoryId', opt_category_update, async (req, res) => {
         try {
             const {name} = req.body as Category
-            const {id} = req.params as {id: string}
-            await db_update_category(id, name)
+            const {categoryId} = req.params as {categoryId: string}
+            await db_update_category(categoryId, name)
             await category_cache_reset()
             return res.status(200).send({status: 'sucess'})
         } catch (err) {

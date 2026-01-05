@@ -18,6 +18,13 @@ export const opt_category_create: RouteShorthandOptions = {
 export const opt_category_update: RouteShorthandOptions = {
     preHandler: [auth_guard, moderator_guard],
     schema: {
+        params: {
+            type: 'object',
+            properties: {
+                categoryId: {type: 'string'}
+            },
+            required: ['categoryId']
+        },
         body: {
             type: 'object',
             properties: {

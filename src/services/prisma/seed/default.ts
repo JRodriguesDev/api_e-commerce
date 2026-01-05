@@ -1,6 +1,8 @@
 import prisma from '../index.js'
 import bcrypt  from 'bcryptjs'
 
+// criando as roles e usuario padrao
+
 export const default_roles = async () => {
     await prisma.role.createMany({
         data: [
