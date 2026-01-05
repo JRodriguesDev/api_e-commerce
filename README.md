@@ -67,11 +67,75 @@ Abaixo, detalho o papel de cada diretório na arquitetura do sistema, focando na
 
 ## Considerações Finais de Implementação
 **Nota Técnica**: A decisão de utilizar Redis para armazenar metadados de ordens foi tomada para otimizar a experiência do usuário e garantir a integridade dos dados, contornando limitações de latência em APIs externas. Além disso, a separação em src/logic garante que as rotas permaneçam limpas e focadas apenas na entrada e saída de dados.
-## 🚀 Como Executar o Projeto
-Siga os passos abaixo para configurar o ambiente de desenvolvimento local.
+## 🚀 Guia de Instalação e Setup
+Este projeto utiliza Docker para padronizar o ambiente de desenvolvimento, facilitando a configuração do banco de dados PostgreSQL, Redis e Stripe CLI.
 
 1. **Pré-requisitos**
 - Node.js (v25.2.1)
 - Docker & Docker Compose
-2. **Configuração do Ambiente**
-- Clone o repositório e instale as dependências:
+2. **Configuração do Inicial**
+Clone o repositório e instale as dependências locais:
+```
+      git clone https://github.com/JRodriguesDev/api_e-commerce.git
+      cd api_e-commerce
+      npm install
+```
+
+**Configuração do Redis**
+Para a segurança do container de cache, crie um arquivo chamado **[redis.conf](https://github.com/redis/redis/blob/unstable/redis.conf)** na raiz do projeto e adicione os seguintes parâmetros:
+```
+    bind 0.0.0.0 -::1
+    user default off
+    user root on ><redis password> ~* +@all
+```
+
+**Variáveis de Ambiente**
+Crie um arquivo .env na raiz do projeto. **Importante**: Substitua ``<password>`` e ``<redis password>`` pela senha de sua preferência a senha do ``.env`` e ``redis.conf`` devem ser iguais.
+```   
+    POSTGRES_USER=root
+    POSTGRES_PASSWORD=<password>
+    POSTGRES_DB=ecommerce
+    STRIPE_SECRET="" # Senha da stripe secret obtida na Stripe
+    STRIPE_CLI_SECRET="" # Será obtido após o primeiro login no container
+    JWT_PASSWORD=""
+    COOKIE_SECRET=""
+    DATABASE_URL="postgresql://root:<POSTGRES_PASSWORD>@postgres:5432/ecommerce?schema=public"
+    REDIS_URL='redis://root:<redis password>@redis:6379'
+    START='DEFAULT'
+```
+
+3. **Inicialização do Projeto**
+O setup inicial é dividido em duas etapas para garantir a correta autenticação com a Stripe e migração do banco.
+**Passo A**: Build e Autenticação Stripe
+```
+  npm run build
+  docker compose -f docker/compose.yaml up --build
+```
+
+- Com os containers rodando, observe os logs. Clique no link de autenticação gerado pelo container da Stripe para vincular sua conta.
+- Após a verificação, você terá acesso ao ``STRIPE_CLI_SECRET``.
+
+**Passo B**: Migração do Banco de Dados
+Com os containers ativos, abra um novo terminal e acesse o container da aplicação para executar as migrações do Prisma:
+```
+  docker exec -it app bash
+  # Entre no container e execute:
+  npx prisma migrate dev
+```
+
+**Passo C**: Ajuste Final e Reinicialização
+Para aplicar todas as configurações e garantir que o webhook da Stripe funcione corretamente:
+No seu ``.env``, altere temporariamente a variável ``DEFAULT`` para ``FALSE``.
+
+Reinicie os containers:
+```
+  docker compose -f docker/compose.yaml down
+  docker compose -f docker/compose.yaml up --build
+```
+
+Após a reinicialização bem-sucedida, altere START de volta para default (ou qualquer outro valor) para evitar conflitos em inicializações futuras.
+
+## 📖 Acesso à Documentação
+Com o ecossistema rodando, você pode testar todos os endpoints, fluxos de pagamento e assinaturas através da interface interativa:
+
+🔗 Swagger UI: http://localhost:3000/docs
