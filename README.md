@@ -149,3 +149,6 @@ Após executar as migrações e o comando de seed, o banco de dados será popula
 - Cargo: Todos (Permissão total no sistema)
 
 **Nota**: Recomenda-se alterar a senha após o primeiro acesso em um ambiente de produção simulado.
+<p align="center">
+  <img src="./assets/swagger-ui.png" alt="Swagger UI Documentation" width="100%">
+</p>
