@@ -1,6 +1,13 @@
 # BackEnd Ecommerce - Stripe Integrado
 Este projeto é o resultado de um estudo sobre o desenvolvimento de ecossistemas de e-commerce. O objetivo principal foi construir um backend sólido e organizado, focado na gestão de pagamentos e assinaturas, aplicando boas práticas de arquitetura e segurança.
 
+## 📸 Visualização da API (Swagger UI):
+Para facilitar o teste e a integração, a API conta com uma interface interativa completa. Abaixo, você pode conferir uma prévia da nossa documentação dinâmica
+
+<p align="center">
+  <img src="./assets/swagger-ui.png" alt="Swagger UI Documentation" width="100%">
+</p>
+
 ## 🌟 Funcionalidades do Sistema
 
 ### 🛒 Experiência de Compra e Assinaturas (Stripe)
@@ -73,7 +80,7 @@ Este projeto utiliza Docker para padronizar o ambiente de desenvolvimento, facil
 1. **Pré-requisitos**
 - Node.js (v25.2.1)
 - Docker & Docker Compose
-2. **Configuração do Inicial**
+2. **Configuração Inicial**
 Clone o repositório e instale as dependências locais:
 ```
       git clone https://github.com/JRodriguesDev/api_e-commerce.git
@@ -149,6 +156,11 @@ Após executar as migrações e o comando de seed, o banco de dados será popula
 - Cargo: Todos (Permissão total no sistema)
 
 **Nota**: Recomenda-se alterar a senha após o primeiro acesso em um ambiente de produção simulado.
-<p align="center">
-  <img src="./assets/swagger-ui.png" alt="Swagger UI Documentation" width="100%">
-</p>
+
+## 👨‍💻 Autor
+Se você tiver dúvidas sobre este projeto ou quiser conversar sobre oportunidades, sinta-se à vontade para entrar em contato:
+
+- **Nome**: José Rodrigues Flora
+- **LinkedIn**: **[José Rodrigues](https://www.linkedin.com/in/joserodrigues-dev/)**
+- **Instagram**: **[jose.rodriguess1](https://www.instagram.com/jose.rodriguess1/)**
+- **E-mail**: 0joserodrigues0@gmail.com
