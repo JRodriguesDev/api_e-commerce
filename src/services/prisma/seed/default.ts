@@ -1,6 +1,8 @@
 import prisma from '../index.js'
 import bcrypt  from 'bcryptjs'
 
+import {create_customer} from '#stripe_core/customer.js'
+
 // criando as roles e usuario padrao
 
 export const default_roles = async () => {
@@ -16,14 +18,26 @@ export const default_roles = async () => {
 }
 
 export const default_user = async () => {
+        const customer = await create_customer({name: 'root', email: 'root@gmail.com'})
         const user = await prisma.user.create({
             data: {
                 name: 'root',
                 email: 'root@gmail.com',
                 password: await bcrypt.hash('admin123', 10),
-                stripeProfile: {create: {id: 'dasa'}}
             },
             select: {id: true}
+        })
+        await prisma.stripeProfile.create({
+            data: {
+                id: customer.id,
+                user: {connect: {id: user.id}}
+            }
+        })
+        const new_cart = await prisma.cart.create({
+            data: {
+                user: {connect: {id: user.id}}
+            },
+            include: {items: true}
         })
         const roles = await prisma.role.findMany({select: {name: true}})
         for (const el of roles) {
