@@ -126,7 +126,7 @@ Com os containers ativos, abra um novo terminal e acesse o container da aplicaç
 
 **Passo C**: Ajuste Final e Reinicialização
 Para aplicar todas as configurações e garantir que o webhook da Stripe funcione corretamente:
-No seu ``.env``, altere temporariamente a variável ``DEFAULT`` para ``FALSE``.
+No seu ``.env``, altere temporariamente a variável ``START`` de ``DEFAULT`` para ``FALSE``.
 
 Reinicie os containers:
 ```
@@ -140,3 +140,12 @@ Após a reinicialização bem-sucedida, altere START de volta para default (ou q
 Com o ecossistema rodando, você pode testar todos os endpoints, fluxos de pagamento e assinaturas através da interface interativa:
 
 🔗 Swagger UI: http://localhost:3000/docs
+
+## 🔑 Credenciais de Acesso (Seed)
+Após executar as migrações e o comando de seed, o banco de dados será populado com um usuário administrador padrão para que você possa testar as rotas autenticadas e a gestão de permissões:
+
+- E-mail: root@gmail.com
+- Senha: admin123
+- Cargo: Todos (Permissão total no sistema)
+
+**Nota**: Recomenda-se alterar a senha após o primeiro acesso em um ambiente de produção simulado.
