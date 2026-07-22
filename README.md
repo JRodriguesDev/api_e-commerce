@@ -17,13 +17,13 @@ Para facilitar o teste e a integração, a API conta com uma interface interativ
 4. Histórico Financeiro: Listagem detalhada de ordens de serviço e faturas geradas para o usuário.
 
 ### 🛡️ Segurança e Controle de Acesso
-1. Autenticação Robusta: Sistema de login via Cookies seguros utilizando Tokens JWT para identificação.
-2. Gestão de Permissões (RBAC): Controle de acesso baseado em cargos (roles) para gerenciar o que cada nível de usuário pode visualizar ou editar.
+1. Autenticação: Sistema de login via Cookies seguros utilizando Tokens JWT para identificação.
+2. Gestão de Permissões: Controle de acesso baseado em cargos (roles) para gerenciar o que cada nível de usuário pode visualizar ou editar.
 3. Criptografia de Dados: Proteção de informações sensíveis, como senhas, utilizando algoritmos de hash de última geração.
 
 ### ⚡ Performance e Qualidade de Dados
 1. Sistema de Cache: Implementação de Redis para otimizar requisições repetitivas, reduzindo a carga no banco de dados e acelerando a resposta para o usuário.
-2. Validação Rigorosa: Todos os dados de entrada passam por validações automáticas para garantir a integridade do sistema.
+2. Validação: Todos os dados de entrada passam por validações automáticas para garantir a integridade do sistema.
 3. Catálogo Ativo: Exibição dinâmica de produtos, planos e reviews de usuários com filtragem por status.
 
 ### 📋 Gestão de Dados (CRUD)
@@ -32,7 +32,7 @@ Para facilitar o teste e a integração, a API conta com uma interface interativ
 ## 🛠️ Stack Tecnológico
 
 ### Core & Frameworks
-- **[Fastify](https://fastify.dev/)**: Framework web focado em ultra performance e arquitetura baseada em plugins.
+- **[Fastify](https://fastify.dev/)**: Framework web Node.js utilizado para estruturar as rotas e organizar o back-end de forma modular.
 - **[TypeScript](https://www.typescriptlang.org/)**: Garantia de segurança de tipos em todo o fluxo da aplicação.
 - **[Zod](https://zod.dev/)**: Validação de esquemas e contratos de dados com tipagem estática automática.
 
